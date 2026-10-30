@@ -1,0 +1,3923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Island Survival Challenge: Community Governance & Pedagogical Framework</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. ROOT VARIABLES & THEME
+       ========================================================================== */
+    :root {
+      --bg-parchment: #f6f1e7;
+      --bg-parchment-deep: #ede4d1;
+      --bg-sand: #e8dec8;
+      --bg-sand-light: #fbf8f2;
+      --driftwood-dark: #2c221e;
+      --driftwood-medium: #4a3b32;
+      --driftwood-light: #70584b;
+      --border-wood: #8d6b4f;
+      --wood-varnish: #3a2a22;
+      
+      --canopy-green: #2d6a4f;
+      --canopy-green-light: #40916c;
+      --canopy-green-glow: rgba(45, 106, 79, 0.2);
+      
+      --campfire-amber: #e07a5f;
+      --campfire-gold: #f4a261;
+      --campfire-glow: rgba(224, 122, 95, 0.25);
+      
+      --lagoon-teal: #1d7874;
+      --lagoon-teal-light: #2da19c;
+      --lagoon-glow: rgba(29, 120, 116, 0.2);
+      
+      --wax-crimson: #b5382a;
+      --wax-crimson-dark: #87261a;
+      --wax-glow: rgba(181, 56, 42, 0.3);
+
+      --ink-dark: #1f1917;
+      --ink-muted: #5e524b;
+      --ink-light: #8a7a70;
+      
+      --font-display: 'Cinzel', 'Fraunces', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+
+      --shadow-sm: 0 2px 4px rgba(44, 34, 30, 0.08);
+      --shadow-md: 0 6px 16px rgba(44, 34, 30, 0.12);
+      --shadow-lg: 0 12px 32px rgba(44, 34, 30, 0.18);
+      --shadow-tactile: 0 4px 0 #2c221e;
+      --border-trail: 2px dashed #b89f88;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg-parchment);
+      color: var(--ink-dark);
+      font-family: var(--font-body);
+      min-height: 100%;
+      line-height: 1.5;
+      overflow-x: hidden;
+      overflow-y: visible;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(232, 222, 200, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(224, 122, 95, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(45, 106, 79, 0.06) 0%, transparent 60%);
+      background-attachment: scroll;
+      position: relative;
+    }
+
+    /* Subtle paper texture overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      min-height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Container */
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.25rem 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================================================================
+       2. TOP BASECAMP HUD (NATURALLY SCROLLABLE HEADER)
+       ========================================================================== */
+    .basecamp-hud {
+      position: relative;
+      z-index: 10;
+      background: rgba(44, 34, 30, 0.96);
+      border-bottom: 3px solid var(--campfire-amber);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      color: var(--bg-parchment);
+      padding: 0.75rem 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .hud-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hud-compass {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--campfire-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, #4a3b32 0%, #2c221e 100%);
+      box-shadow: 0 0 10px rgba(244, 162, 97, 0.4);
+      animation: pulseCompass 4s infinite ease-in-out;
+    }
+
+    @keyframes pulseCompass {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(25deg); }
+    }
+
+    .hud-title-wrap h1 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hud-title-wrap p {
+      font-size: 0.75rem;
+      color: #dfcfbf;
+      font-family: var(--font-mono);
+    }
+
+    /* Roster Chip */
+    .roster-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(244, 162, 97, 0.35);
+      border-radius: 30px;
+      padding: 0.35rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .roster-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #52b788;
+      box-shadow: 0 0 6px #52b788;
+      display: inline-block;
+    }
+
+    /* Community Survival & Harmony Index Meter */
+    .harmony-container {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 12px;
+      min-width: 220px;
+      max-width: 100%;
+    }
+
+    .harmony-label-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .harmony-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cfbeaf;
+      font-weight: 700;
+    }
+
+    .harmony-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #ffd166;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .harmony-bar-track {
+      flex: 1;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .harmony-bar-fill {
+      height: 100%;
+      width: 78%;
+      background: linear-gradient(90deg, #e07a5f, #f4a261, #2d6a4f, #52b788);
+      border-radius: 6px;
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .harmony-bar-fill::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Strategy Lens Filter Pills */
+    .strategy-pills-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .strategy-pill {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #dfcfbf;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+
+    .strategy-pill:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .strategy-pill.active-pbl {
+      background: var(--campfire-amber);
+      border-color: #f4a261;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(224, 122, 95, 0.6);
+    }
+
+    .strategy-pill.active-flipped {
+      background: var(--lagoon-teal);
+      border-color: #48cae4;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(29, 120, 116, 0.6);
+    }
+
+    .strategy-pill.active-gamification {
+      background: var(--canopy-green);
+      border-color: #52b788;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(45, 106, 79, 0.6);
+    }
+
+    /* Quick HUD Controls */
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #dfcfbf;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .hud-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    /* Strategy Callout Banner (Appears inside current active module) */
+    .strategy-lens-banner {
+      background: linear-gradient(135deg, rgba(44, 34, 30, 0.95), rgba(74, 59, 50, 0.95));
+      border-left: 6px solid var(--campfire-gold);
+      border-radius: 10px;
+      padding: 0.9rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: none;
+      align-items: flex-start;
+      gap: 1rem;
+      color: var(--bg-parchment);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      animation: slideDown 0.35s ease-out;
+    }
+
+    .strategy-lens-banner.visible {
+      display: flex;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lens-icon-box {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .lens-content h4 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: #ffd166;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lens-content p {
+      font-size: 0.85rem;
+      color: #e8dec8;
+      line-height: 1.45;
+    }
+
+    .lens-close-btn {
+      margin-left: auto;
+      background: transparent;
+      border: none;
+      color: #dfcfbf;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.2rem;
+    }
+
+    /* ==========================================================================
+       3. NAVIGATION BAR (CARVED CAMP SIGNPOSTS)
+       ========================================================================== */
+    .camp-signposts-nav {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (max-width: 1024px) {
+      .camp-signposts-nav {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .camp-signposts-nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .basecamp-hud {
+        padding: 0.65rem 0.85rem;
+        margin-bottom: 1rem;
+      }
+      .hud-inner {
+        gap: 0.65rem;
+      }
+      .harmony-container {
+        min-width: 0;
+        width: 100%;
+      }
+      .strategy-pills-wrap {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .app-container {
+        padding: 0 0.75rem 2rem;
+      }
+      .parchment-sheet {
+        padding: 1.25rem 0.85rem;
+      }
+    }
+
+    .signpost-tab {
+      background: linear-gradient(180deg, #44342a 0%, #2f2219 100%);
+      border: 2px solid #5a4638;
+      border-radius: 8px;
+      padding: 0.75rem 0.6rem;
+      cursor: pointer;
+      text-align: center;
+      color: #d8c7b8;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      user-select: none;
+    }
+
+    /* Wood grain and brass pins */
+    .signpost-tab::before, .signpost-tab::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #c59b27;
+      box-shadow: inset 0 1px 1px #000, 0 1px 2px rgba(0,0,0,0.5);
+    }
+    .signpost-tab::before { left: 8px; }
+    .signpost-tab::after { right: 8px; }
+
+    .signpost-tab:hover {
+      transform: translateY(-3px);
+      border-color: var(--campfire-gold);
+      color: #fff;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .signpost-tab.active {
+      background: linear-gradient(180deg, #5c4333 0%, #3e2d23 100%);
+      border-color: var(--campfire-amber);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(224, 122, 95, 0.4), inset 0 0 12px rgba(244, 162, 97, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .signpost-tab.active .tab-indicator {
+      opacity: 1;
+      width: 60%;
+    }
+
+    .tab-member-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      color: var(--campfire-gold);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .tab-title {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: inherit;
+    }
+
+    .tab-strat-badge {
+      font-size: 0.6rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e8dec8;
+    }
+
+    .tab-indicator {
+      height: 3px;
+      width: 0;
+      background: var(--campfire-amber);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      opacity: 0;
+    }
+
+    /* ==========================================================================
+       4. MODULE CARD SHELL & EDITABLE MEMBER BADGES
+       ========================================================================== */
+    .module-pane {
+      display: none;
+      animation: fadeInModule 0.35s ease-out;
+    }
+
+    .module-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeInModule {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .parchment-sheet {
+      background: var(--bg-sand-light);
+      border: 2px solid var(--border-wood);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    /* Expedition Field Journal Border Motif */
+    .parchment-sheet::before {
+      content: "";
+      position: absolute;
+      top: 8px; left: 8px; right: 8px; bottom: 8px;
+      border: var(--border-trail);
+      border-radius: 12px;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .module-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 2px solid var(--border-wood);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .module-headline h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--driftwood-dark);
+      letter-spacing: -0.01em;
+    }
+
+    .module-headline p {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Styled Editable Name Badge */
+    .expedition-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #f0e6d2;
+      border: 2px solid var(--campfire-amber);
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      box-shadow: var(--shadow-sm);
+      cursor: text;
+      transition: all 0.2s;
+    }
+
+    .expedition-badge:hover {
+      background: #fff;
+      border-color: var(--campfire-gold);
+      box-shadow: 0 0 10px rgba(224, 122, 95, 0.3);
+    }
+
+    .badge-icon {
+      font-size: 1rem;
+    }
+
+    .badge-role {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      color: var(--driftwood-light);
+    }
+
+    .editable-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--driftwood-dark);
+      outline: none;
+      border-bottom: 1px dashed var(--campfire-amber);
+      min-width: 130px;
+      padding: 1px 4px;
+    }
+
+    .editable-name:focus {
+      background: #fff;
+      border-bottom: 1px solid var(--canopy-green);
+      box-shadow: 0 0 4px rgba(45, 106, 79, 0.3);
+      border-radius: 3px;
+    }
+
+    .strategy-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--driftwood-dark);
+      color: #ffd166;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    /* Common Card Styling */
+    .camp-card {
+      background: #fff;
+      border: 1px solid var(--border-wood);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .camp-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .camp-card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--driftwood-dark);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-wood {
+      background: linear-gradient(180deg, #4f3b2f 0%, #34241b 100%);
+      color: #fff;
+      border: 1px solid #715542;
+      border-radius: 8px;
+      padding: 0.6rem 1.15rem;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1f1611, 0 4px 8px rgba(0,0,0,0.25);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+
+    .btn-wood:hover {
+      background: linear-gradient(180deg, #61493b 0%, #443024 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #1f1611, 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .btn-wood:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #1f1611;
+    }
+
+    .btn-wood.btn-amber {
+      background: linear-gradient(180deg, #e07a5f 0%, #b34a2e 100%);
+      border-color: #f4a261;
+      box-shadow: 0 3px 0 #7e2d17;
+    }
+    .btn-wood.btn-amber:hover {
+      background: linear-gradient(180deg, #eb8c73 0%, #c4573b 100%);
+    }
+
+    .btn-wood.btn-green {
+      background: linear-gradient(180deg, #2d6a4f 0%, #1b4332 100%);
+      border-color: #52b788;
+      box-shadow: 0 3px 0 #0f271d;
+    }
+    .btn-wood.btn-green:hover {
+      background: linear-gradient(180deg, #37805f 0%, #245842 100%);
+    }
+
+    .btn-wood.btn-teal {
+      background: linear-gradient(180deg, #1d7874 0%, #134e4b 100%);
+      border-color: #48cae4;
+      box-shadow: 0 3px 0 #0b312f;
+    }
+
+    /* ==========================================================================
+       5. TAB 1: LEADERSHIP & DECISION-MAKING (PBL)
+       ========================================================================== */
+    .t1-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .t1-grid { grid-template-columns: 1fr; }
+    }
+
+    /* SVG Roundtable Visual */
+    .roundtable-board {
+      background: radial-gradient(circle, #fcfaf6 0%, #ebdcc6 100%);
+      border: 2px solid var(--border-wood);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .roundtable-svg {
+      width: 100%;
+      max-width: 460px;
+      height: auto;
+      filter: drop-shadow(0 8px 16px rgba(44, 34, 30, 0.15));
+    }
+
+    .seat-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .seat-node:hover circle {
+      stroke: var(--campfire-amber);
+      stroke-width: 3.5px;
+      filter: drop-shadow(0 0 6px rgba(224, 122, 95, 0.8));
+    }
+
+    .seat-node.selected circle {
+      stroke: var(--wax-crimson);
+      stroke-width: 4px;
+      filter: drop-shadow(0 0 8px rgba(181, 56, 42, 0.9));
+    }
+
+    /* Council Sector List below map */
+    .sector-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .sector-chips-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .sector-chip-btn {
+      background: #fdfcf9;
+      border: 1px solid #c9b49f;
+      border-radius: 6px;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.72rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .sector-chip-btn:hover, .sector-chip-btn.active {
+      background: var(--driftwood-dark);
+      color: #fff;
+      border-color: var(--campfire-amber);
+    }
+
+    /* Decision Simulator Panel */
+    .decision-simulator-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .dilemma-select-box select {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: #fff;
+      border: 2px solid var(--border-wood);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      color: var(--driftwood-dark);
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .pbl-step-stepper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .pbl-step-btn {
+      background: #f7f1e5;
+      border: 1px solid var(--border-wood);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pbl-step-btn:hover {
+      background: #f0e6d2;
+      border-color: var(--campfire-amber);
+    }
+
+    .pbl-step-btn.completed {
+      background: #e8f5e9;
+      border-color: var(--canopy-green);
+    }
+
+    .pbl-step-btn.current {
+      background: #fff;
+      border: 2px solid var(--campfire-amber);
+      box-shadow: 0 0 10px rgba(224, 122, 95, 0.2);
+    }
+
+    .pbl-step-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--driftwood-dark);
+    }
+
+    .pbl-step-desc {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    /* Voting Badges Flip Grid */
+    .vote-badges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .vote-badge {
+      background: #fdfbf7;
+      border: 1px solid #d4c2b0;
+      border-radius: 6px;
+      padding: 0.4rem;
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      transition: all 0.4s ease;
+    }
+
+    .vote-badge.deliberating {
+      background: #fef8eb;
+      color: #b27300;
+      border-color: #ffd166;
+    }
+
+    .vote-badge.approved {
+      background: #e8f5e9;
+      color: #1b4332;
+      border-color: #40916c;
+      transform: scale(1.02);
+    }
+
+    .vote-badge.amended {
+      background: #e0f2f1;
+      color: #004d40;
+      border-color: #26a69a;
+    }
+
+    .vote-badge.vetoed {
+      background: #ffebee;
+      color: #b71c1c;
+      border-color: #ef5350;
+    }
+
+    /* Decision Log Output */
+    .council-log-box {
+      background: #231b17;
+      color: #ffd166;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.45;
+      max-height: 160px;
+      overflow-y: auto;
+      border-left: 4px solid var(--campfire-amber);
+    }
+
+    /* ==========================================================================
+       6. TAB 2: RESOURCE INVENTORY & ALLOCATION (FLIPPED CLASSROOM)
+       ========================================================================== */
+    .t2-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .t2-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Supply Ledger Table */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .ledger-table th {
+      background: #ede2cf;
+      color: var(--driftwood-dark);
+      font-family: var(--font-display);
+      text-align: left;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 2px solid var(--border-wood);
+      font-size: 0.8rem;
+    }
+
+    .ledger-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid #e2d6c1;
+      vertical-align: middle;
+    }
+
+    .item-name {
+      font-weight: 700;
+      color: var(--driftwood-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .item-sub {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .stock-meter-wrap {
+      width: 100px;
+      height: 8px;
+      background: #e2d6c1;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .stock-meter-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+
+    .status-safe { background: #d8f3dc; color: #1b4332; }
+    .status-warn { background: #ffe5d9; color: #9d0208; }
+    .status-boil { background: #fff3b0; color: #7f5539; }
+
+    .qty-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid var(--border-wood);
+      background: #f6f1e7;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      transition: all 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: var(--campfire-amber);
+      color: #fff;
+      border-color: var(--campfire-amber);
+    }
+
+    .qty-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      min-width: 38px;
+      text-align: center;
+    }
+
+    /* Live Allocation Simulator Buttons */
+    .allocation-actions-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    /* Distribution & Monitoring Log */
+    .dist-log-container {
+      background: #2b221d;
+      color: #e8dec8;
+      border-radius: 10px;
+      padding: 1rem;
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid #4a3b32;
+    }
+
+    .log-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+    }
+
+    .log-timestamp {
+      color: var(--campfire-gold);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .log-equity-note {
+      color: #90e0ef;
+      font-style: italic;
+      margin-top: 0.15rem;
+    }
+
+    /* Flipped Classroom Flip Card */
+    .flip-card-wrapper {
+      perspective: 1000px;
+      margin-top: 1.25rem;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 190px;
+      text-align: left;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .flip-card-wrapper.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .flip-card-front {
+      background: linear-gradient(135deg, #f7f1e5 0%, #ebe0ca 100%);
+      border: 2px dashed var(--campfire-amber);
+    }
+
+    .flip-card-back {
+      background: linear-gradient(135deg, #2c221e 0%, #3e302a 100%);
+      color: #f7f1e5;
+      border: 2px solid var(--campfire-gold);
+      transform: rotateY(180deg);
+    }
+
+    /* ==========================================================================
+       7. TAB 3: CONFLICT RESOLUTION & FAIRNESS (FLIPPED CLASSROOM)
+       ========================================================================== */
+    .dispute-banner {
+      background: linear-gradient(90deg, #ffebee 0%, #fff 100%);
+      border-left: 5px solid var(--wax-crimson);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dispute-headline {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--wax-crimson-dark);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stepper-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .stepper-nav::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: #dfcfbf;
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .step-node-btn {
+      position: relative;
+      z-index: 2;
+      background: #f6f1e7;
+      border: 2px solid var(--border-wood);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .step-node-btn:hover {
+      border-color: var(--campfire-amber);
+      transform: scale(1.1);
+    }
+
+    .step-node-btn.active {
+      background: var(--wax-crimson);
+      color: #fff;
+      border-color: #ffd166;
+      box-shadow: 0 0 12px rgba(181, 56, 42, 0.6);
+    }
+
+    .step-node-btn.done {
+      background: var(--canopy-green);
+      color: #fff;
+      border-color: #52b788;
+    }
+
+    .mediation-card-display {
+      background: #fff;
+      border: 2px solid var(--border-wood);
+      border-radius: 12px;
+      padding: 1.75rem;
+      min-height: 280px;
+      position: relative;
+    }
+
+    /* Wax Seal Stamp */
+    .wax-seal-stamp {
+      position: absolute;
+      bottom: 20px;
+      right: 25px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #d94334, #911d12);
+      border: 4px dashed #6b140b;
+      box-shadow: 0 8px 20px rgba(107, 20, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffddd6;
+      transform: rotate(-12deg) scale(0.6);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .wax-seal-stamp.stamped {
+      display: flex;
+      opacity: 1;
+      transform: rotate(-12deg) scale(1);
+    }
+
+    .seal-title {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .seal-sub {
+      font-size: 0.55rem;
+      font-family: var(--font-mono);
+      opacity: 0.9;
+    }
+
+    /* ==========================================================================
+       8. TAB 4: ENVIRONMENTAL MISSIONS & SUSTAINABILITY (FLIPPED CLASSROOM)
+       ========================================================================== */
+    .eco-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .eco-cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .eco-mission-card {
+      background: #fff;
+      border: 2px solid #b8d8be;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+
+    .eco-mission-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(45, 106, 79, 0.15);
+      border-color: var(--canopy-green);
+    }
+
+    .eco-mission-card.completed {
+      background: #f1f8f4;
+      border-color: var(--canopy-green);
+    }
+
+    .eco-mission-card.completed::before {
+      content: "VERIFIED SUSTAINABLE";
+      position: absolute;
+      top: 15px;
+      right: -30px;
+      background: var(--canopy-green);
+      color: #fff;
+      font-size: 0.55rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      padding: 2px 30px;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .eco-icon-header {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #e8f5e9;
+      color: var(--canopy-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .eco-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--driftwood-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .eco-desc {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      line-height: 1.45;
+      margin-bottom: 1rem;
+    }
+
+    .eco-metrics-pill {
+      background: #e9ecef;
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: #333;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Leaves / Confetti Particle canvas */
+    #particle-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+    }
+
+    /* ==========================================================================
+       9. TAB 5: ISLAND SURVIVAL LEAGUE SCOREBOARD (GAMIFICATION)
+       ========================================================================== */
+    .rubric-gauges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (max-width: 900px) {
+      .rubric-gauges-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .gauge-card {
+      background: #fff;
+      border: 1px solid var(--border-wood);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .gauge-circle-svg {
+      width: 90px;
+      height: 90px;
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: #ede4d1;
+      stroke-width: 8;
+    }
+
+    .gauge-val-ring {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    .gauge-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--driftwood-dark);
+    }
+
+    .gauge-title {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink-dark);
+    }
+
+    /* 8-Group Leaderboard */
+    .leaderboard-wrap {
+      background: #fff;
+      border: 2px solid var(--border-wood);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .group-rank-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #ebdcc6;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .group-rank-row:hover {
+      background: #fdfaf4;
+    }
+
+    .group-rank-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      width: 24px;
+      color: var(--driftwood-light);
+    }
+
+    .group-name-col {
+      flex: 1;
+    }
+
+    .group-label {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--driftwood-dark);
+    }
+
+    .group-tier-tag {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .tier-castaway { background: #e0e0e0; color: #424242; }
+    .tier-pathfinder { background: #ffe0b2; color: #e65100; }
+    .tier-guardian { background: #c8e6c9; color: #1b5e20; }
+    .tier-vanguard { background: #bbdefb; color: #0d47a1; font-weight: 700; }
+
+    .group-bar-track {
+      width: 140px;
+      height: 10px;
+      background: #ede4d1;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .group-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f4a261, #2d6a4f);
+      border-radius: 5px;
+      transition: width 0.5s ease;
+    }
+
+    /* Badges Showcase */
+    .badges-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .badges-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .reflection-badge-token {
+      background: #fcfbf9;
+      border: 2px dashed #c4ad99;
+      border-radius: 10px;
+      padding: 0.85rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .reflection-badge-token:hover, .reflection-badge-token.unlocked {
+      background: #fff;
+      border-style: solid;
+      border-color: var(--campfire-amber);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(224, 122, 95, 0.25);
+    }
+
+    .badge-glyph {
+      font-size: 2rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .badge-name {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--driftwood-dark);
+    }
+
+    /* ==========================================================================
+       10. TAB 6: DEBRIEFING & TEACHING STRATEGIES (FLIPPED CLASSROOM)
+       ========================================================================== */
+    .trace-stepper-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .trace-stepper-grid { grid-template-columns: 1fr; }
+    }
+
+    .trace-card {
+      background: #fff;
+      border: 2px solid var(--border-wood);
+      border-radius: 10px;
+      padding: 1rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .trace-card:hover {
+      border-color: var(--campfire-amber);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .trace-card.active {
+      border-color: var(--campfire-amber);
+      background: #fdfbf7;
+      box-shadow: 0 0 14px rgba(224, 122, 95, 0.3);
+    }
+
+    .trace-letter {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--campfire-amber);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .trace-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--driftwood-dark);
+    }
+
+    /* Reflection Corkboard */
+    .corkboard-wrap {
+      background: #d4a373;
+      border: 4px solid #5e3023;
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35), var(--shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .corkboard-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+      .corkboard-columns { grid-template-columns: 1fr; }
+    }
+
+    .cork-column-header {
+      background: #3e2723;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .cork-notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      min-height: 200px;
+    }
+
+    .sticky-note {
+      background: #fffa65;
+      padding: 0.9rem;
+      border-radius: 2px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      position: relative;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: #2b2b2b;
+      transform: rotate(var(--rot, -1deg));
+      transition: transform 0.2s;
+    }
+
+    .sticky-note::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #d90429;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .sticky-note.note-pink { background: #ffcbf2; }
+    .sticky-note.note-green { background: #d8f3dc; }
+    .sticky-note.note-blue { background: #caf0f8; }
+
+    .sticky-author {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #555;
+      margin-top: 0.4rem;
+      text-align: right;
+    }
+
+    /* Pin live reflection form */
+    .pin-form-wrap {
+      background: #fdfcf9;
+      border: 1px solid var(--border-wood);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .pin-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid #c9b49f;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+
+    .pin-select {
+      padding: 0.55rem 0.8rem;
+      border: 1px solid #c9b49f;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      background: #fff;
+    }
+
+    /* 3-Strategy Integration Matrix */
+    .matrix-diagram-wrap {
+      background: #fff;
+      border: 2px solid var(--border-wood);
+      border-radius: 14px;
+      padding: 1.75rem;
+      position: relative;
+    }
+
+    .matrix-nodes-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .matrix-nodes-row { grid-template-columns: 1fr; }
+    }
+
+    .matrix-node-card {
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 1.15rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .matrix-node-card.pbl-node {
+      border-color: var(--campfire-amber);
+      background: #fdf7f4;
+    }
+
+    .matrix-node-card.flipped-node {
+      border-color: var(--lagoon-teal);
+      background: #f2f9f9;
+    }
+
+    .matrix-node-card.gamification-node {
+      border-color: var(--canopy-green);
+      background: #f1f8f4;
+    }
+
+    .matrix-node-card:hover, .matrix-node-card.active {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .synergy-callout-box {
+      background: #2b221d;
+      color: #f7f1e5;
+      border-radius: 10px;
+      padding: 1.25rem;
+      border-left: 5px solid #ffd166;
+    }
+
+    /* ==========================================================================
+       11. MODAL / TOAST / UTILITIES
+       ========================================================================== */
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--driftwood-dark);
+      color: #fff;
+      border: 2px solid var(--campfire-amber);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Print styling */
+    @media print {
+      .basecamp-hud, .camp-signposts-nav, .btn-wood, .pin-form-wrap {
+        display: none !important;
+      }
+      .module-pane {
+        display: block !important;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particle Canvas for Eco Celebration -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- ==========================================================================
+       TOP BASECAMP HUD (PERSISTENT HEADER)
+       ========================================================================== -->
+  <header class="basecamp-hud" id="basecampHud">
+    <div class="hud-inner">
+      <!-- Title & Branding -->
+      <div class="hud-brand">
+        <div class="hud-compass" title="Expedition Compass – Basecamp Coordinates 09°14'N 123°42'E">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd166" stroke-width="2">
+            <polygon points="12 2 19 21 12 17 5 21 12 2"></polygon>
+          </svg>
+        </div>
+        <div class="hud-title-wrap">
+          <h1>ISLAND BASECAMP  <span style="font-size:0.75rem; background:#4a3b32; padding:2px 6px; border-radius:4px; color:#ffd166;">JHS SIMULATOR</span></h1>
+          <p>Community Governance & Pedagogical Matrix</p>
+        </div>
+      </div>
+
+      <!-- Stranded Roster Metric -->
+      <div class="roster-chip" title="Community Demographics">
+        <span class="roster-dot"></span>
+        <span><strong>54</strong> JHS Students &bull; <strong>8</strong> Teachers (8 Sectors)</span>
+      </div>
+
+      <!-- Live Community Survival & Harmony Index -->
+      <div class="harmony-container" title="Current Survival & Social Stability Quotient">
+        <div class="harmony-label-wrap">
+          <span class="harmony-label">Survival &amp; Harmony Index</span>
+          <div class="harmony-value">
+            <span id="harmonyNum">78</span><span>%</span>
+          </div>
+        </div>
+        <div class="harmony-bar-track">
+          <div class="harmony-bar-fill" id="harmonyBar"></div>
+        </div>
+      </div>
+
+      <!-- Strategy Lens Filter Pills -->
+      <div class="strategy-pills-wrap">
+        <span style="font-size:0.7rem; color:#d4c2b0; margin-right:4px;">Pedagogical Lens:</span>
+        <button class="strategy-pill" id="pillPbl" onclick="toggleStrategyLens('pbl')">
+          <span>🔍</span> PBL
+        </button>
+        <button class="strategy-pill" id="pillFlipped" onclick="toggleStrategyLens('flipped')">
+          <span>🔄</span> Flipped Classroom
+        </button>
+        <button class="strategy-pill" id="pillGamification" onclick="toggleStrategyLens('gamification')">
+          <span>🏆</span> Gamification
+        </button>
+      </div>
+
+      <!-- Quick Audio & Reset Controls -->
+      <div class="hud-controls">
+        <button class="hud-btn" onclick="resetSimulation()" title="Reset Session Data">
+          <span>↺</span> Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== -->
+  <main class="app-container">
+
+    <!-- Active Strategy Lens Callout Banner (Appears on click of HUD pill) -->
+    <aside class="strategy-lens-banner" id="strategyLensBanner">
+      <div class="lens-icon-box" id="lensIcon">💡</div>
+      <div class="lens-content">
+        <h4 id="lensTitle">Strategy Spotlight Active</h4>
+        <p id="lensDesc">Select a pedagogical lens above to reveal how Problem-Based Learning, Flipped Classroom recall, and Gamification drive survivor success.</p>
+      </div>
+      <button class="lens-close-btn" onclick="closeStrategyBanner()" title="Close banner">&times;</button>
+    </aside>
+
+    <!-- Navigation Bar: 6 Carved Camp Signposts -->
+    <nav class="camp-signposts-nav" role="tablist" aria-label="Camp Presentation Modules">
+      <button class="signpost-tab active" onclick="switchTab(1)" id="tabNav1">
+        <span class="tab-member-tag">Member 1</span>
+        <span class="tab-title">1. Leadership &amp; Votes</span>
+        <span class="tab-strat-badge">Problem-Based Learning</span>
+        <div class="tab-indicator"></div>
+      </button>
+
+      <button class="signpost-tab" onclick="switchTab(2)" id="tabNav2">
+        <span class="tab-member-tag">Member 2</span>
+        <span class="tab-title">2. Supplies &amp; Equity</span>
+        <span class="tab-strat-badge">Flipped Classroom</span>
+        <div class="tab-indicator"></div>
+      </button>
+
+      <button class="signpost-tab" onclick="switchTab(3)" id="tabNav3">
+        <span class="tab-member-tag">Member 3</span>
+        <span class="tab-title">3. Conflict &amp; Accord</span>
+        <span class="tab-strat-badge">Flipped Classroom</span>
+        <div class="tab-indicator"></div>
+      </button>
+
+      <button class="signpost-tab" onclick="switchTab(4)" id="tabNav4">
+        <span class="tab-member-tag">Member 4</span>
+        <span class="tab-title">4. Eco-Missions</span>
+        <span class="tab-strat-badge">Flipped Classroom</span>
+        <div class="tab-indicator"></div>
+      </button>
+
+      <button class="signpost-tab" onclick="switchTab(5)" id="tabNav5">
+        <span class="tab-member-tag">Member 5</span>
+        <span class="tab-title">5. Survival League</span>
+        <span class="tab-strat-badge">Cooperative Gamification</span>
+        <div class="tab-indicator"></div>
+      </button>
+
+      <button class="signpost-tab" onclick="switchTab(6)" id="tabNav6">
+        <span class="tab-member-tag">Member 6</span>
+        <span class="tab-title">6. TRACE Debrief</span>
+        <span class="tab-strat-badge">Tri-Strategy Synthesis</span>
+        <div class="tab-indicator"></div>
+      </button>
+    </nav>
+
+
+    <!-- ========================================================================
+         TAB 1: MEMBER 1 – LEADERSHIP & DECISION-MAKING (PBL)
+         ======================================================================== -->
+    <section class="module-pane active" id="pane1" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>The Eight-Voice Council &amp; Democratic Governance</h2>
+            <p>Problem-Based Learning: Authentic Crisis Resolution &amp; Distributed JHS Leadership</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <!-- Editable Member Name Badge -->
+            <div class="expedition-badge" title="Click to edit presenter's name">
+              <span class="badge-icon">🪶</span>
+              <span class="badge-role">Expedition Leader 1:</span>
+              <span class="editable-name" contenteditable="true" id="member1Name" onblur="saveName('member1Name')">Member 1 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: PBL</span>
+          </div>
+        </div>
+
+        <!-- Tab 1 Layout -->
+        <div class="t1-grid">
+          <!-- Left: SVG Roundtable Diagram -->
+          <div class="roundtable-board">
+            <h3 style="font-family:var(--font-display); font-size:1.05rem; margin-bottom:0.75rem; color:var(--driftwood-dark);">
+              Interactive Eight-Voice Council Hearth
+            </h3>
+            <p style="font-size:0.75rem; color:var(--ink-muted); margin-bottom:1rem; text-align:center;">
+              Click any perimeter seat to examine that sector's operational dilemma, student lead, and teacher advisor.
+            </p>
+
+            <svg class="roundtable-svg" viewBox="0 0 400 400" id="roundtableSvg">
+              <!-- Background Outer Ring / Trail -->
+              <circle cx="200" cy="200" r="175" fill="none" stroke="#b89f88" stroke-width="2" stroke-dasharray="6,6"/>
+              <circle cx="200" cy="200" r="140" fill="#ede1cc" stroke="#8d6b4f" stroke-width="3"/>
+              
+              <!-- Center Campfire / Hearth -->
+              <circle cx="200" cy="200" r="50" fill="#2c221e" stroke="#e07a5f" stroke-width="3"/>
+              <!-- Hearth Ember Flame (Animated) -->
+              <polygon points="200,165 212,195 200,190 188,195" fill="#f4a261"/>
+              <polygon points="200,172 208,198 200,194 192,198" fill="#e07a5f"/>
+              <circle cx="200" cy="200" r="14" fill="#ffd166"/>
+              <text x="200" y="222" font-family="'Cinzel', serif" font-size="9" font-weight="700" fill="#f6f1e7" text-anchor="middle">HEARTH</text>
+
+              <!-- 8 Council Seats (Generated with precise radial math) -->
+              <!-- Seat 1: Governance (0 deg - Top) -->
+              <g class="seat-node selected" id="seat1" onclick="selectCouncilSeat(1)">
+                <circle cx="200" cy="55" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="200" y="52" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-1</text>
+                <text x="200" y="66" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Gov</text>
+              </g>
+
+              <!-- Seat 2: Shelter (45 deg) -->
+              <g class="seat-node" id="seat2" onclick="selectCouncilSeat(2)">
+                <circle cx="302" cy="98" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="302" y="95" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-2</text>
+                <text x="302" y="109" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Shelter</text>
+              </g>
+
+              <!-- Seat 3: Water (90 deg - Right) -->
+              <g class="seat-node" id="seat3" onclick="selectCouncilSeat(3)">
+                <circle cx="345" cy="200" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="345" y="197" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-3</text>
+                <text x="345" y="211" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Water</text>
+              </g>
+
+              <!-- Seat 4: Food & Firewood (135 deg) -->
+              <g class="seat-node" id="seat4" onclick="selectCouncilSeat(4)">
+                <circle cx="302" cy="302" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="302" y="299" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-4</text>
+                <text x="302" y="313" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Forage</text>
+              </g>
+
+              <!-- Seat 5: First Aid / Sanitation (180 deg - Bottom) -->
+              <g class="seat-node" id="seat5" onclick="selectCouncilSeat(5)">
+                <circle cx="200" cy="345" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="200" y="342" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-5</text>
+                <text x="200" y="356" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Health</text>
+              </g>
+
+              <!-- Seat 6: Signaling & Rescue (225 deg) -->
+              <g class="seat-node" id="seat6" onclick="selectCouncilSeat(6)">
+                <circle cx="98" cy="302" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="98" y="299" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-6</text>
+                <text x="98" y="313" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Signal</text>
+              </g>
+
+              <!-- Seat 7: Tool Craft (270 deg - Left) -->
+              <g class="seat-node" id="seat7" onclick="selectCouncilSeat(7)">
+                <circle cx="55" cy="200" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="55" y="197" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-7</text>
+                <text x="55" y="211" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Tools</text>
+              </g>
+
+              <!-- Seat 8: Morale / Logistics (315 deg) -->
+              <g class="seat-node" id="seat8" onclick="selectCouncilSeat(8)">
+                <circle cx="98" cy="98" r="24" fill="#fff" stroke="#8d6b4f" stroke-width="2"/>
+                <text x="98" y="95" font-family="'Space Mono'" font-size="10" font-weight="700" text-anchor="middle" fill="#2c221e">S-8</text>
+                <text x="98" y="109" font-family="'Plus Jakarta Sans'" font-size="8" font-weight="600" text-anchor="middle" fill="#70584b">Morale</text>
+              </g>
+            </svg>
+
+            <!-- Quick Seat Selection Grid -->
+            <div class="sector-chips-grid">
+              <button class="sector-chip-btn active" id="secBtn1" onclick="selectCouncilSeat(1)">1. Governance</button>
+              <button class="sector-chip-btn" id="secBtn2" onclick="selectCouncilSeat(2)">2. Shelter</button>
+              <button class="sector-chip-btn" id="secBtn3" onclick="selectCouncilSeat(3)">3. Water Safety</button>
+              <button class="sector-chip-btn" id="secBtn4" onclick="selectCouncilSeat(4)">4. Foraging/Food</button>
+              <button class="sector-chip-btn" id="secBtn5" onclick="selectCouncilSeat(5)">5. Sanitation</button>
+              <button class="sector-chip-btn" id="secBtn6" onclick="selectCouncilSeat(6)">6. Rescue Signal</button>
+              <button class="sector-chip-btn" id="secBtn7" onclick="selectCouncilSeat(7)">7. Tool Craft</button>
+              <button class="sector-chip-btn" id="secBtn8" onclick="selectCouncilSeat(8)">8. Morale/Logistics</button>
+            </div>
+          </div>
+
+          <!-- Right: Sector Details & Live Decision Simulator -->
+          <div class="decision-simulator-panel">
+            <!-- Active Sector Detail Card -->
+            <div class="camp-card" id="sectorDetailCard">
+              <div class="camp-card-title">
+                <span id="secDetailTitle">Sector 1: Community Governance</span>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--canopy-green); font-weight:700;">ACTIVE INQUIRY</span>
+              </div>
+              <div style="font-size:0.82rem; line-height:1.5;">
+                <p><strong>Student Rep:</strong> <span id="secStudentRep">Student 1</span></p>
+                <p><strong>Teacher Advisor:</strong> <span id="secTeacherAdv">Teacher 1</span></p>
+              </div>
+            </div>
+
+            <!-- Live Council Decision Simulator -->
+            <div class="camp-card">
+              <div class="camp-card-title">
+                <span>Live Decision Simulator</span>
+                <span style="font-size:0.7rem; background:#ffd166; padding:2px 6px; border-radius:4px; font-weight:700;">DEMO MODE</span>
+              </div>
+
+              <!-- Dilemma Selector -->
+              <div class="dilemma-select-box" style="margin-bottom:0.85rem;">
+                <label style="font-size:0.75rem; font-weight:700; color:var(--driftwood-light); display:block; margin-bottom:4px;">
+                  SELECT AUTHENTIC ISLAND DILEMMA:
+                </label>
+                <select id="dilemmaSelector" onchange="changeDilemma()">
+                  <option value="water">Dilemma 1: Unverified Mountain Spring vs. Dwindling Rainwater Catch</option>
+                </select>
+              </div>
+
+              <!-- 3-Step Interactive Button Flow -->
+              <div class="pbl-step-stepper">
+                <div class="pbl-step-btn current" id="pblStep1" onclick="runPBLStep(1)">
+                  <div>
+                    <div class="pbl-step-title">1. Investigate Problem (PBL Inquiry)</div>
+                    <div class="pbl-step-desc" id="pblStep1Desc">Break down constraints, safety hazards, and testable assumptions.</div>
+                  </div>
+                  <span id="stepIcon1">▶</span>
+                </div>
+
+                <div class="pbl-step-btn" id="pblStep2" onclick="runPBLStep(2)">
+                  <div>
+                    <div class="pbl-step-title">2. Assess Urgency &amp; Safety Boundary</div>
+                    <div class="pbl-step-desc">Faculty health review &amp; student urgency rating matrix.</div>
+                  </div>
+                  <span id="stepIcon2">🔒</span>
+                </div>
+
+                <div class="pbl-step-btn" id="pblStep3" onclick="runPBLStep(3)">
+                  <div>
+                    <div class="pbl-step-title">3. Trigger 8-Voice Council Vote</div>
+                    <div class="pbl-step-desc">Simulate consensus voting across all 8 sector representatives.</div>
+                  </div>
+                  <span id="stepIcon3">🗳️</span>
+                </div>
+              </div>
+
+              <!-- 8 Voting Badges Matrix (Flips on Vote) -->
+              <div style="margin-top:0.85rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <span style="font-size:0.72rem; font-weight:700; color:var(--driftwood-dark);">COUNCIL SECTOR STATUS:</span>
+                </div>
+                <div class="vote-badges-grid" id="voteBadgesContainer">
+                  <div class="vote-badge deliberating" id="vb1">S1: Ready</div>
+                  <div class="vote-badge deliberating" id="vb2">S2: Ready</div>
+                  <div class="vote-badge deliberating" id="vb3">S3: Ready</div>
+                  <div class="vote-badge deliberating" id="vb4">S4: Ready</div>
+                  <div class="vote-badge deliberating" id="vb5">S5: Ready</div>
+                  <div class="vote-badge deliberating" id="vb6">S6: Ready</div>
+                  <div class="vote-badge deliberating" id="vb7">S7: Ready</div>
+                  <div class="vote-badge deliberating" id="vb8">S8: Ready</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================
+         TAB 2: MEMBER 2 – RESOURCE INVENTORY & ALLOCATION (FLIPPED CLASSROOM)
+         ======================================================================== -->
+    <section class="module-pane" id="pane2" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>Camp Supply Ledger &amp; Equity Allocation</h2>
+            <p>Flipped Classroom: Applying Pre-Trip Scientific Protocols to Scarcity Distribution</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div class="expedition-badge">
+              <span class="badge-icon">⚖️</span>
+              <span class="badge-role">Expedition Leader 2:</span>
+              <span class="editable-name" contenteditable="true" id="member2Name" onblur="saveName('member2Name')">Member 2 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: FLIPPED CLASSROOM</span>
+          </div>
+        </div>
+
+        <div class="t2-grid">
+          <!-- Left: Supply Ledger Table -->
+          <div class="camp-card">
+            <div class="camp-card-title">
+              <span>Interactive Camp Supply Ledger</span>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--ink-muted);">Baseline Need: 155L / 62 Persons</span>
+            </div>
+            
+            <div style="overflow-x:auto;">
+              <table class="ledger-table">
+                <thead>
+                  <tr>
+                    <th>Item &amp; Critical Specs</th>
+                    <th>Status</th>
+                    <th>Current Stock</th>
+                    <th style="text-align:center;">Allocate / Adjust</th>
+                  </tr>
+                </thead>
+                <tbody id="ledgerTableBody">
+                  <!-- Water: Verified Safe -->
+                  <tr>
+                    <td>
+                      <div class="item-name">💧 Verified Boiled Water</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barWaterBoiled" style="width:68%; background:#2a9d8f;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-safe">Verified Safe</span></td>
+                    <td class="qty-val"><span id="qtyWaterBoiled">68</span> L</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('waterBoiled', -5)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('waterBoiled', 5)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Water: Untreated Stream -->
+                  <tr>
+                    <td>
+                      <div class="item-name">⚠️ Untreated Stream Catch</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barWaterStream" style="width:45%; background:#e76f51;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-boil">Needs Boiling</span></td>
+                    <td class="qty-val"><span id="qtyWaterStream">45</span> L</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('waterStream', -5)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('waterStream', 5)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Food: Emergency Rations -->
+                  <tr>
+                    <td>
+                      <div class="item-name">🥫 Boat Survival Rations</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barFoodRations" style="width:40%; background:#f4a261;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-warn">Critical Low</span></td>
+                    <td class="qty-val"><span id="qtyFoodRations">32</span> Pks</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('foodRations', -2)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('foodRations', 2)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Food: Foraged Coconuts -->
+                  <tr>
+                    <td>
+                      <div class="item-name">🥥 Verified Green Coconuts</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barFoodCoconuts" style="width:75%; background:#2d6a4f;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-safe">Verified Safe</span></td>
+                    <td class="qty-val"><span id="qtyFoodCoconuts">58</span> Pcs</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('foodCoconuts', -4)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('foodCoconuts', 4)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Shelter: Tarps -->
+                  <tr>
+                    <td>
+                      <div class="item-name">🏕️ Heavy-Duty Tarps</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barShelterTarps" style="width:25%; background:#b5382a;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-warn">Critical Low</span></td>
+                    <td class="qty-val"><span id="qtyShelterTarps">4</span> Units</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('shelterTarps', -1)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('shelterTarps', 1)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Medical: First Aid Kits -->
+                  <tr>
+                    <td>
+                      <div class="item-name">🩹 First-Aid Trauma Kits</div>
+                      <div class="stock-meter-wrap">
+                        <div class="stock-meter-bar" id="barMedKits" style="width:60%; background:#2a9d8f;"></div>
+                      </div>
+                    </td>
+                    <td><span class="status-badge status-safe">Verified Safe</span></td>
+                    <td class="qty-val"><span id="qtyMedKits">3</span> Kits</td>
+                    <td style="text-align:center;">
+                      <div class="qty-controls">
+                        <button class="qty-btn" onclick="adjustStock('medKits', -1)">-</button>
+                        <button class="qty-btn" onclick="adjustStock('medKits', 1)">+</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+          <!-- Right: Live Allocation Simulator ("Urgency Over Equal Split") -->
+          <div class="camp-card">
+            <div class="camp-card-title">
+              <span>Urgency Allocation Simulator</span>
+              <span style="font-size:0.68rem; background:#e07a5f; color:#fff; padding:2px 6px; border-radius:4px; font-weight:700;">EQUITY OVER EQUAL</span>
+            </div>
+            <p style="font-size:0.78rem; color:var(--ink-muted); margin-bottom:0.85rem;">
+              Demonstrate live how the camp rejects naive equal division (250ml each) in favor of <em>need-based equity</em>:
+            </p>
+
+            <div class="allocation-actions-box">
+              <button class="btn-wood btn-amber" onclick="simulateAllocationAction('water_crew')">
+                <span>💧</span> Allocate Extra Water to Heat-Exhausted Trench Crew
+              </button>
+
+              <button class="btn-wood btn-teal" onclick="simulateAllocationAction('issue_tarps')">
+                <span>🏕️</span> Issue Salvaged Tarps for Approaching Rain Squall
+              </button>
+
+              <button class="btn-wood btn-green" onclick="simulateAllocationAction('boil_batch')">
+                <span>🔥</span> Log New 40L Boiled Water Batch (Sector 3 Sign-off)
+              </button>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================
+         TAB 3: MEMBER 3 – CONFLICT RESOLUTION & FAIRNESS (FLIPPED CLASSROOM)
+         ======================================================================== -->
+    <section class="module-pane" id="pane3" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>Conflict Resolution &amp; The Restorative Accord</h2>
+            <p>Flipped Classroom: Deploying Non-Violent Communication &amp; Needs-Based Mediation</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div class="expedition-badge">
+              <span class="badge-icon">🕊️</span>
+              <span class="badge-role">Expedition Leader 3:</span>
+              <span class="editable-name" contenteditable="true" id="member3Name" onblur="saveName('member3Name')">Member 3 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: FLIPPED MEDIATION</span>
+          </div>
+        </div>
+
+        <!-- Dispute Scenario Banner -->
+        <div class="dispute-banner">
+          <div class="dispute-headline">
+            <span>⚔️ ISLAND CRISIS 16:45:</span> High-Stakes Resource Impasse Between Two Sectors
+          </div>
+          <p style="font-size:0.85rem; color:var(--ink-dark); margin-top:0.35rem; line-height:1.45;">
+            <strong>Group 2 (Shelter &amp; Perimeter)</strong> and <strong>Group 4 (Food &amp; Water Prep)</strong> both seize the last heavy-duty waterproof tarp and the only 20-liter stainless cooking pot before impending dusk and incoming storm clouds. Tempers flare; students claim prior labor rights.
+          </p>
+        </div>
+
+        <!-- 4-Step Interactive Stepper Bar -->
+        <div class="stepper-nav">
+          <div class="step-node-btn active" id="medStepBtn1" onclick="jumpMediationStep(1)">1</div>
+          <div class="step-node-btn" id="medStepBtn2" onclick="jumpMediationStep(2)">2</div>
+          <div class="step-node-btn" id="medStepBtn3" onclick="jumpMediationStep(3)">3</div>
+          <div class="step-node-btn" id="medStepBtn4" onclick="jumpMediationStep(4)">4</div>
+        </div>
+
+        <!-- Active Mediation Stage Content Card -->
+        <div class="mediation-card-display" id="mediationCardDisplay">
+          <!-- Step 1 Content -->
+          <div id="medContent1">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark);">
+                Stage 1: Pause, Cool-Down &amp; Blameless Framing
+              </h3>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--campfire-amber); font-weight:700;">EMOTIONAL TEMP: 90° (ELEVATED)</span>
+            </div>
+            <p style="font-size:0.85rem; line-height:1.5; color:var(--ink-muted);">
+              Rather than escalating to shouting or teacher punitive punishment, Member 3 invokes the <em>Flipped Peer-Mediation Protocol</em> practiced in homeroom guidance before the voyage.
+            </p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0;">
+              <div style="background:#fff3e0; border-left:4px solid #f4a261; padding:0.85rem; border-radius:6px;">
+                <strong style="font-size:0.85rem; color:var(--driftwood-dark);">Group 2 (Shelter Voice):</strong>
+                <p style="font-size:0.8rem; margin-top:4px;"><em>"Our younger classmates will sleep exposed on wet mud without this tarp. Rain will cause hypothermia by midnight!"</em></p>
+              </div>
+              <div style="background:#e0f2f1; border-left:4px solid #26a69a; padding:0.85rem; border-radius:6px;">
+                <strong style="font-size:0.85rem; color:var(--driftwood-dark);">Group 4 (Food/Water Voice):</strong>
+                <p style="font-size:0.8rem; margin-top:4px;"><em>"If we don't boil water in the pot and pitch the tarp to catch rainwater, tomorrow morning 62 survivors will be completely dehydrated!"</em></p>
+              </div>
+            </div>
+            <button class="btn-wood btn-amber" onclick="jumpMediationStep(2)">
+              Proceed to Stage 2: Essential Needs Audit &rarr;
+            </button>
+          </div>
+
+          <!-- Step 2 Content -->
+          <div id="medContent2" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark);">
+                Stage 2: Essential Survival Needs Audit
+              </h3>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--lagoon-teal); font-weight:700;">ANALYSIS: SURVIVAL RULE OF 3s</span>
+            </div>
+            <p style="font-size:0.85rem; line-height:1.5; color:var(--ink-muted);">
+              The mediator separates <em>positions</em> ("We must own the tarp") from <em>underlying survival needs</em> ("Keep dry from squall") by referencing the Survival Rule of 3s (3 hours without shelter vs. 3 days without water):
+            </p>
+            <div style="background:#f6f1e7; border:1px solid #d4c2b0; border-radius:8px; padding:1rem; margin:1rem 0;">
+              <table style="width:100%; font-size:0.82rem; border-collapse:collapse;">
+                <tr style="border-bottom:1px solid #c9b49f;">
+                  <th style="text-align:left; padding:4px 8px;">Claimant</th>
+                  <th style="text-align:left; padding:4px 8px;">Stated Position</th>
+                  <th style="text-align:left; padding:4px 8px;">Underlying Biological Need</th>
+                  <th style="text-align:left; padding:4px 8px;">Urgency Horizon</th>
+                </tr>
+                <tr style="border-bottom:1px solid #ebdcc6;">
+                  <td style="padding:6px 8px; font-weight:700;">Group 2 (Shelter)</td>
+                  <td style="padding:6px 8px;">Keep tarp pinned to A-frame</td>
+                  <td style="padding:6px 8px; color:var(--wax-crimson);">Prevent wind-chill &amp; soaking in sleep</td>
+                  <td style="padding:6px 8px; font-family:var(--font-mono);">Nightfall (20:00 - 06:00)</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 8px; font-weight:700;">Group 4 (Water/Food)</td>
+                  <td style="padding:6px 8px;">Funnel squall runoff with tarp</td>
+                  <td style="padding:6px 8px; color:var(--canopy-green);">Capture 40L non-turbid rainwater</td>
+                  <td style="padding:6px 8px; font-family:var(--font-mono);">Squall Surge (17:00 - 19:00)</td>
+                </tr>
+              </table>
+            </div>
+            <button class="btn-wood btn-amber" onclick="jumpMediationStep(3)">
+              Proceed to Stage 3: Shared Time-Block Solution &rarr;
+            </button>
+          </div>
+
+          <!-- Step 3 Content -->
+          <div id="medContent3" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark);">
+                Stage 3: Shared Time-Block Dual-Use Compromise
+              </h3>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--canopy-green); font-weight:700;">CREATIVE NON-ZERO-SUM</span>
+            </div>
+            <p style="font-size:0.85rem; line-height:1.5; color:var(--ink-muted);">
+              Notice how timing solves the dilemma! The rain squall peaks between 17:00 and 19:00, while sleep begins at 20:30. The two groups collaborate on a dual-use schedule:
+            </p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0;">
+              <div style="border:2px dashed var(--canopy-green); background:#f4f9f6; padding:1rem; border-radius:8px;">
+                <h4 style="font-family:var(--font-display); font-size:0.9rem; color:var(--canopy-green);">⏰ Shift A (17:00 – 19:15): Rain Catchment</h4>
+                <p style="font-size:0.8rem; margin-top:4px;">
+                  Tarp is sloped over bamboo channels leading into the 20L pot. Groups 2 &amp; 4 work side-by-side to catch 45 Liters of fresh runoff!
+                </p>
+              </div>
+              <div style="border:2px dashed var(--campfire-amber); background:#fdf7f4; padding:1rem; border-radius:8px;">
+                <h4 style="font-family:var(--font-display); font-size:0.9rem; color:var(--campfire-amber);">🌙 Shift B (19:30 – 06:00): Shelter Roof</h4>
+                <p style="font-size:0.8rem; margin-top:4px;">
+                  Once containers are full, both groups lash the dry tarp as the primary rain-fly over the communal sleeping barracks.
+                </p>
+              </div>
+            </div>
+            <button class="btn-wood btn-green" onclick="jumpMediationStep(4)">
+              Proceed to Stage 4: Ratify &amp; Stamp Accord &rarr;
+            </button>
+          </div>
+
+          <!-- Step 4 Content (With Stamp) -->
+          <div id="medContent4" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark);">
+                Stage 4: Ratified Camp Accord &amp; Wax Seal
+              </h3>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--wax-crimson); font-weight:700;">COVENANT RESTORED</span>
+            </div>
+            <p style="font-size:0.85rem; line-height:1.5; color:var(--ink-muted);">
+              Both student leads co-sign the camp field journal with Teacher Advisor approval. Click the button below to formally stamp the wax seal onto the island covenant:
+            </p>
+            <div style="background:#fdfcf9; border:1px solid #d4c2b0; border-radius:8px; padding:1.25rem; margin:1rem 0; position:relative; min-height:120px;">
+              <h4 style="font-family:var(--font-display); font-size:0.95rem; color:var(--driftwood-dark); margin-bottom:0.4rem;">
+                COVENANT OF THE SQUALL &amp; CANTEEN #14
+              </h4>
+              <p style="font-size:0.8rem; line-height:1.45; color:#4a3b32; max-width:70%;">
+                "We, the representatives of Shelter (Group 2) and Water/Food (Group 4), agree to share custody of the polycanvas tarp on rotating time-blocks. Neither group claims sole ownership; communal survival supersedes sector pride."
+              </p>
+              <div style="margin-top:0.6rem; font-size:0.75rem; font-family:var(--font-mono); color:var(--ink-muted);">
+                Signatures: <em>Liam K. (G2) &bull; Chloe R. (G4) &bull; Dr. Alcantara (Faculty Veto Cleared)</em>
+              </div>
+
+              <!-- Animated Wax Seal Element -->
+              <div class="wax-seal-stamp" id="waxSealElement">
+                <span class="seal-title">ISLAND<br>ACCORD</span>
+                <span class="seal-sub">RATIFIED<br>17:00</span>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:0.75rem; align-items:center;">
+              <button class="btn-wood btn-amber" id="stampAccordBtn" onclick="stampAccord()">
+                <span>🏮</span> Stamp Camp Accord (+5% Harmony)
+              </button>
+              <span id="stampStatusText" style="font-size:0.8rem; font-family:var(--font-mono); color:var(--canopy-green); font-weight:700;">
+                Awaiting Seal...
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================
+         TAB 4: MEMBER 4 – ENVIRONMENTAL MISSIONS & SUSTAINABILITY (FLIPPED CLASSROOM)
+         ======================================================================== -->
+    <section class="module-pane" id="pane4" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>Environmental Missions &amp; Eco-Regenerative Camp</h2>
+            <p>Flipped Classroom: Applying Leave-No-Trace &amp; Low-Impact Ecology to Survival</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div class="expedition-badge">
+              <span class="badge-icon">🌿</span>
+              <span class="badge-role">Expedition Leader 4:</span>
+              <span class="editable-name" contenteditable="true" id="member4Name" onblur="saveName('member4Name')">Member 4 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: FLIPPED ECOLOGY</span>
+          </div>
+        </div>
+
+        <p style="font-size:0.88rem; color:var(--ink-muted); margin-bottom:1.5rem;">
+          Junior High School science students don't simply strip the island of resources. Utilizing the <em>Leave-No-Trace (LNT)</em> pre-expedition curriculum, each sector performs specialized eco-missions that yield immediate survival gains while protecting fragile coastal ecosystems.
+        </p>
+
+        <!-- 3 Playable Eco-Mission Cards -->
+        <div class="eco-cards-grid">
+          <!-- Mission 1: Hydro-Guard -->
+          <div class="eco-mission-card" id="ecoCard1">
+            <div>
+              <div class="eco-icon-header">💧</div>
+              <h3 class="eco-title">Mission 1: Hydro-Guard</h3>
+              <p style="font-size:0.75rem; font-family:var(--font-mono); color:var(--lagoon-teal); font-weight:700; margin-bottom:6px;">
+                WATER CONSERVATION &amp; GREYWATER REUSE
+              </p>
+              <p class="eco-desc">
+                Construct gravity-fed sand and coconut-fiber filtration beds to recycle mess-kit wash water for latrine rinsing. Pitch solar condensation stills over non-toxic broadleaf foliage.
+              </p>
+              <div class="eco-metrics-pill">
+                <span>Recycled Yield:</span> <strong>+18 Liters / Day</strong>
+              </div>
+            </div>
+            <button class="btn-wood btn-green" id="ecoBtn1" onclick="completeEcoMission(1)">
+              <span>🌱</span> Complete Eco-Mission (+10 Pts)
+            </button>
+          </div>
+
+          <!-- Mission 2: Zero-Trace Shoreline -->
+          <div class="eco-mission-card" id="ecoCard2">
+            <div>
+              <div class="eco-icon-header">🏖️</div>
+              <h3 class="eco-title">Mission 2: Zero-Trace Shoreline</h3>
+              <p style="font-size:0.75rem; font-family:var(--font-mono); color:var(--canopy-green); font-weight:700; margin-bottom:6px;">
+                WASTE UPCYCLING &amp; MARINE DEFENSE
+              </p>
+              <p class="eco-desc">
+                Collect washed-up marine plastic bottles and slice them into continuous high-tensile cords for bamboo lashing. Dig deep compost pits 80 meters downwind from water sources.
+              </p>
+              <div class="eco-metrics-pill">
+                <span>Marine Debris Cleared:</span> <strong>42 Items Repurposed</strong>
+              </div>
+            </div>
+            <button class="btn-wood btn-green" id="ecoBtn2" onclick="completeEcoMission(2)">
+              <span>🌱</span> Complete Eco-Mission (+10 Pts)
+            </button>
+          </div>
+
+          <!-- Mission 3: Salvage & Mend -->
+          <div class="eco-mission-card" id="ecoCard3">
+            <div>
+              <div class="eco-icon-header">🪓</div>
+              <h3 class="eco-title">Mission 3: Salvage &amp; Mend</h3>
+              <p style="font-size:0.75rem; font-family:var(--font-mono); color:var(--campfire-amber); font-weight:700; margin-bottom:6px;">
+                REGENERATIVE HARVESTING &amp; TOOL REUSE
+              </p>
+              <p class="eco-desc">
+                Prohibit cutting live coastal mangrove trees (which buffer storm waves). Harvest only naturally fallen deadwood and pliable wild liana vines. Mend damaged tarp eyelets with woven cord.
+              </p>
+              <div class="eco-metrics-pill">
+                <span>Live Trees Felled:</span> <strong>0 (100% Buffer Intact)</strong>
+              </div>
+            </div>
+            <button class="btn-wood btn-green" id="ecoBtn3" onclick="completeEcoMission(3)">
+              <span>🌱</span> Complete Eco-Mission (+10 Pts)
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Eco Feedback Banner -->
+        <div class="camp-card" style="background:linear-gradient(90deg, #f1f8f4 0%, #fff 100%); border-left:5px solid var(--canopy-green);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h4 style="font-family:var(--font-display); font-size:1rem; color:var(--canopy-green);">
+                Live Environmental Scoreboard Synchronization:
+              </h4>
+              <p style="font-size:0.82rem; color:var(--ink-muted); margin-top:2px;">
+                Points earned here transfer directly into <strong>Member 5's Gamification Scoreboard</strong> under the <em>Environmental Sustainability Rubric</em>!
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <span style="font-family:var(--font-mono); font-size:1.25rem; font-weight:700; color:var(--canopy-green);">
+                +<span id="ecoPointsEarned">0</span> Eco Pts Awarded
+              </span>
+              <button class="btn-wood btn-teal" onclick="switchTab(5)">
+                Inspect Scoreboard (Tab 5) &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================
+         TAB 5: MEMBER 5 – ISLAND SURVIVAL LEAGUE SCOREBOARD (GAMIFICATION)
+         ======================================================================== -->
+    <section class="module-pane" id="pane5" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>The Island Survival League &amp; Cooperative Gamification</h2>
+            <p>Gamification Strategy: Non-Zero-Sum Progression &amp; Ethical Incentive Architecture</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div class="expedition-badge">
+              <span class="badge-icon">🏆</span>
+              <span class="badge-role">Expedition Leader 5:</span>
+              <span class="editable-name" contenteditable="true" id="member5Name" onblur="saveName('member5Name')">Member 5 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: GAMIFICATION</span>
+          </div>
+        </div>
+
+        <!-- 100-Point Fair Scoring Rubric Visualizer (4 Dynamic SVG Gauges) -->
+        <div style="margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-family:var(--font-display); font-size:1.1rem; color:var(--driftwood-dark);">
+            100-Point Fair Scoring Rubric (25 Points Each)
+          </h3>
+          <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--campfire-amber); font-weight:700;">
+            Total Collective Score: <span id="totalRubricScore">78</span> / 100
+          </span>
+        </div>
+
+        <div class="rubric-gauges-grid">
+          <!-- Gauge 1: Cooperation -->
+          <div class="gauge-card">
+            <svg class="gauge-circle-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+              <circle class="gauge-val-ring" id="ringCoop" cx="50" cy="50" r="40" stroke="#e07a5f" stroke-dasharray="251.2" stroke-dashoffset="50"/>
+            </svg>
+            <div class="gauge-num"><span id="valCoop">20</span> / 25</div>
+            <div class="gauge-title">Cooperation &amp; Teamwork</div>
+            <p style="font-size:0.7rem; color:var(--ink-muted);">Inter-sector tool sharing and blameless communication.</p>
+          </div>
+
+          <!-- Gauge 2: Ethical Decisions -->
+          <div class="gauge-card">
+            <svg class="gauge-circle-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+              <circle class="gauge-val-ring" id="ringEthic" cx="50" cy="50" r="40" stroke="#f4a261" stroke-dasharray="251.2" stroke-dashoffset="40"/>
+            </svg>
+            <div class="gauge-num"><span id="valEthic">21</span> / 25</div>
+            <div class="gauge-title">Ethical &amp; Safe Decisions</div>
+            <p style="font-size:0.7rem; color:var(--ink-muted);">Adherence to boiling rules and teacher veto guidelines.</p>
+          </div>
+
+          <!-- Gauge 3: Role Responsibility -->
+          <div class="gauge-card">
+            <svg class="gauge-circle-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+              <circle class="gauge-val-ring" id="ringResp" cx="50" cy="50" r="40" stroke="#1d7874" stroke-dasharray="251.2" stroke-dashoffset="60"/>
+            </svg>
+            <div class="gauge-num"><span id="valResp">19</span> / 25</div>
+            <div class="gauge-title">Role Responsibility</div>
+            <p style="font-size:0.7rem; color:var(--ink-muted);">Fulfilling daily sector watch and perimeter duties.</p>
+          </div>
+
+          <!-- Gauge 4: Environmental Sustainability (Synced with Tab 4!) -->
+          <div class="gauge-card" style="border:2px solid var(--canopy-green); background:#f7fbf8;">
+            <svg class="gauge-circle-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+              <circle class="gauge-val-ring" id="ringEco" cx="50" cy="50" r="40" stroke="#2d6a4f" stroke-dasharray="251.2" stroke-dashoffset="70"/>
+            </svg>
+            <div class="gauge-num" style="color:var(--canopy-green);"><span id="valEco">18</span> / 25</div>
+            <div class="gauge-title">Environmental Stewardship</div>
+            <p style="font-size:0.7rem; color:var(--canopy-green); font-weight:600;">Synced live with Member 4 Eco-Missions!</p>
+          </div>
+        </div>
+
+        <!-- Live 8-Group Leaderboard & Point Award Console -->
+        <div class="leaderboard-wrap">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <h3 style="font-family:var(--font-display); font-size:1.1rem; color:var(--driftwood-dark);">
+                Live 8-Sector Progress Toward "Rescue-Ready" Tier
+              </h3>
+              <p style="font-size:0.78rem; color:var(--ink-muted);">
+                Gamification Philosophy: <em>Anti-Zero-Sum</em>. No group is eliminated. All 8 sectors combine scores to elevate the whole island!
+              </p>
+            </div>
+
+            <!-- Presenter Live Award Console -->
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; background:#f6f1e7; padding:0.5rem 0.85rem; border-radius:8px; border:1px solid #d4c2b0;">
+              <span style="font-size:0.72rem; font-weight:700; color:var(--driftwood-dark);">AWARD POINTS LIVE:</span>
+              <select id="awardSectorSelect" style="padding:0.35rem; font-size:0.75rem; border-radius:4px; border:1px solid #c4ad99;">
+                <option value="1">Sector 1: Governance</option>
+                <option value="2">Sector 2: Shelter</option>
+                <option value="3">Sector 3: Water Safety</option>
+                <option value="4">Sector 4: Food/Forage</option>
+                <option value="5">Sector 5: Sanitation</option>
+                <option value="6">Sector 6: Rescue Signal</option>
+                <option value="7">Sector 7: Tool Craft</option>
+                <option value="8">Sector 8: Morale/Logistics</option>
+              </select>
+              <button class="btn-wood btn-amber" style="padding:0.35rem 0.65rem; font-size:0.72rem;" onclick="awardPointsLive('coop')">+5 Coop</button>
+              <button class="btn-wood btn-teal" style="padding:0.35rem 0.65rem; font-size:0.72rem;" onclick="awardPointsLive('ethic')">+5 Ethic</button>
+              <button class="btn-wood btn-green" style="padding:0.35rem 0.65rem; font-size:0.72rem;" onclick="awardPointsLive('resp')">+5 Resp</button>
+            </div>
+          </div>
+
+          <!-- Sector Rows Container -->
+          <div id="leaderboardRowsContainer">
+            <!-- Dynamically populated rows -->
+          </div>
+        </div>
+
+        <!-- Unlockable Reflection Badges Showcase -->
+        <h3 style="font-family:var(--font-display); font-size:1.05rem; color:var(--driftwood-dark); margin-bottom:0.75rem;">
+          Unlockable Competency Badges (Click to inspect criteria)
+        </h3>
+        <div class="badges-row">
+          <div class="reflection-badge-token unlocked" onclick="inspectBadge('fairness')">
+            <div class="badge-glyph">⚖️</div>
+            <div class="badge-name">Voice of Fairness</div>
+            <span style="font-size:0.65rem; color:var(--canopy-green); font-weight:700;">UNLOCKED &check;</span>
+          </div>
+
+          <div class="reflection-badge-token unlocked" onclick="inspectBadge('water')">
+            <div class="badge-glyph">💧</div>
+            <div class="badge-name">Water Guardian</div>
+            <span style="font-size:0.65rem; color:var(--canopy-green); font-weight:700;">UNLOCKED &check;</span>
+          </div>
+
+          <div class="reflection-badge-token" id="badgeZeroWaste" onclick="inspectBadge('waste')">
+            <div class="badge-glyph">🌿</div>
+            <div class="badge-name">Zero-Waste Steward</div>
+            <span style="font-size:0.65rem; color:var(--campfire-amber); font-weight:700;" id="badgeWasteStatus">REQUIRES 20 ECO PTS</span>
+          </div>
+
+          <div class="reflection-badge-token" id="badgeBridgeBuilder" onclick="inspectBadge('bridge')">
+            <div class="badge-glyph">🤝</div>
+            <div class="badge-name">Bridge Builder</div>
+            <span style="font-size:0.65rem; color:var(--campfire-amber); font-weight:700;" id="badgeBridgeStatus">REQUIRES ALLIANCE VOTE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================================================
+         TAB 6: MEMBER 6 – DEBRIEFING & TEACHING STRATEGIES (FLIPPED CLASSROOM)
+         ======================================================================== -->
+    <section class="module-pane" id="pane6" role="tabpanel">
+      <div class="parchment-sheet">
+        <!-- Module Header -->
+        <div class="module-header-row">
+          <div class="module-headline">
+            <h2>The TRACE Debriefing Wheel &amp; Pedagogical Synthesis</h2>
+            <p>Tri-Strategy Integration: How Problem-Based Learning, Flipped Classroom &amp; Gamification Interlock</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div class="expedition-badge">
+              <span class="badge-icon">🧭</span>
+              <span class="badge-role">Expedition Leader 6:</span>
+              <span class="editable-name" contenteditable="true" id="member6Name" onblur="saveName('member6Name')">Member 6 (Click to Edit)</span>
+            </div>
+            <span class="strategy-tag">STRATEGY: TRI-LENS SYNTHESIS</span>
+          </div>
+        </div>
+
+        <!-- Interactive TRACE Debriefing Stepper -->
+        <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark); margin-bottom:0.75rem;">
+          The Interactive TRACE Experiential Debriefing Model
+        </h3>
+        <p style="font-size:0.85rem; color:var(--ink-muted); margin-bottom:1rem;">
+          Click any phase card in the TRACE cycle to expand how students transition from raw survival crisis to metacognitive growth:
+        </p>
+
+        <div class="trace-stepper-grid">
+          <div class="trace-card active" id="traceCardT" onclick="selectTraceStep('T')">
+            <div class="trace-letter">T</div>
+            <div class="trace-title">Tell</div>
+            <p style="font-size:0.72rem; color:var(--ink-muted); margin-top:4px;">Share raw observations and emotional reactions.</p>
+          </div>
+
+          <div class="trace-card" id="traceCardR" onclick="selectTraceStep('R')">
+            <div class="trace-letter">R</div>
+            <div class="trace-title">Review</div>
+            <p style="font-size:0.72rem; color:var(--ink-muted); margin-top:4px;">Benchmark actions against camp safety bylaws.</p>
+          </div>
+
+          <div class="trace-card" id="traceCardA" onclick="selectTraceStep('A')">
+            <div class="trace-letter">A</div>
+            <div class="trace-title">Analyze</div>
+            <p style="font-size:0.72rem; color:var(--ink-muted); margin-top:4px;">Investigate root causes of failures &amp; bottlenecks.</p>
+          </div>
+
+          <div class="trace-card" id="traceCardC" onclick="selectTraceStep('C')">
+            <div class="trace-letter">C</div>
+            <div class="trace-title">Choose</div>
+            <p style="font-size:0.72rem; color:var(--ink-muted); margin-top:4px;">Select concrete operational improvements.</p>
+          </div>
+
+          <div class="trace-card" id="traceCardE" onclick="selectTraceStep('E')">
+            <div class="trace-letter">E</div>
+            <div class="trace-title">Establish</div>
+            <p style="font-size:0.72rem; color:var(--ink-muted); margin-top:4px;">Lock in binding pledges for all 62 survivors.</p>
+          </div>
+        </div>
+
+        <!-- Expanded TRACE Detail Card -->
+        <div class="camp-card" style="margin-bottom:2rem; background:#fffcf6; border-left:5px solid var(--campfire-amber);" id="traceDetailBox">
+          <h4 style="font-family:var(--font-display); font-size:1.05rem; color:var(--driftwood-dark);" id="traceBoxTitle">
+            T – TELL: Raw Observational Storytelling
+          </h4>
+          <p style="font-size:0.85rem; line-height:1.5; color:var(--ink-dark); margin-top:0.4rem;" id="traceBoxBody">
+            "When the storm warning horn sounded, Sector 4 grabbed the cooking vessel while Sector 2 was already carrying the tarp toward the ridge. We were yelling over each other because we didn't know who had scheduled priority."
+          </p>
+          <div style="margin-top:0.6rem; font-size:0.75rem; font-family:var(--font-mono); color:var(--campfire-amber); font-weight:700;" id="traceBoxLesson">
+            Key Inquiry: Giving voice to all 54 students before analyzing blame prevents defensive reactions.
+          </div>
+        </div>
+
+        <!-- Interactive Reflection Board ("What Worked / What Failed / What to Improve") -->
+        <div class="corkboard-wrap">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; color:#fff;">
+            <div>
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:#ffd166;">
+                📌 Community Reflection Corkboard
+              </h3>
+              <p style="font-size:0.78rem; opacity:0.85;">
+                Live pinned sticky notes from students, teachers, and presentation attendees.
+              </p>
+            </div>
+            <span style="font-size:0.75rem; font-family:var(--font-mono); background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:4px;">
+              Live Pinning Active
+            </span>
+          </div>
+
+          <div class="corkboard-columns">
+            <!-- Column 1: What Worked -->
+            <div>
+              <div class="cork-column-header">🟢 WHAT WORKED WELL</div>
+              <div class="cork-notes-list" id="colWorked">
+                <div class="sticky-note" style="--rot:-2deg;">
+                  "The 8-Voice Council gave equal voting power to younger Grade 7 reps so Grade 9s couldn't monopolize the food."
+                  <div class="sticky-author">- (Student-1)</div>
+                </div>
+                <div class="sticky-note note-green" style="--rot:1deg;">
+                  "Boiling untreated stream water for 3 full minutes kept zero students sick from bacterial waterborne bugs."
+                  <div class="sticky-author">- (Faculty)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: What Failed -->
+            <div>
+              <div class="cork-column-header">🔴 WHAT FAILED / BOTTLENECKS</div>
+              <div class="cork-notes-list" id="colFailed">
+                <div class="sticky-note note-pink" style="--rot:2deg;">
+                  "Lashing tarps with unbraided beach grass snapped during the 40-knot storm gusts. We need stronger vine lianas."
+                  <div class="sticky-author">- (Student-2)</div>
+                </div>
+                <div class="sticky-note" style="--rot:-1.5deg;">
+                  "Two sectors kept their radios on during non-watch hours, draining our only solar battery by 15%."
+                  <div class="sticky-author">- (Student-6)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3: What to Improve -->
+            <div>
+              <div class="cork-column-header">🟡 WHAT TO IMPROVE TOMORROW</div>
+              <div class="cork-notes-list" id="colImprove">
+                <div class="sticky-note note-blue" style="--rot:-1deg;">
+                  "Post the daily tarp and pot schedule on the Council Signpost before morning breakfast rations."
+                  <div class="sticky-author">- (Student-4)</div>
+                </div>
+                <div class="sticky-note" style="--rot:2deg;">
+                  "Pair one teacher advisor with two student sector leads for rapid emergency veto checks."
+                  <div class="sticky-author">- (Advisor)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Pinning Input Form for Professor / Presenter -->
+          <div class="pin-form-wrap">
+            <span style="font-size:0.8rem; font-weight:700; color:var(--driftwood-dark);">Pin Live Note:</span>
+            <input type="text" class="pin-input" id="pinInputText" placeholder="Type a reflection or professor question..." />
+            <select class="pin-select" id="pinColSelect">
+              <option value="worked">Worked Well</option>
+              <option value="failed">Failed / Bottleneck</option>
+              <option value="improve">Improve Tomorrow</option>
+            </select>
+            <input type="text" style="width:110px;" class="pin-input" id="pinAuthorInput" placeholder="Your Name" value="Professor / Guest" />
+            <button class="btn-wood btn-amber" onclick="pinLiveReflection()">
+              <span>📌</span> Pin Note
+            </button>
+          </div>
+        </div>
+
+        <!-- The 3-Strategy Integration Matrix (Crucial Professor Requirement) -->
+        <div class="matrix-diagram-wrap">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+            <div>
+              <h3 style="font-family:var(--font-display); font-size:1.15rem; color:var(--driftwood-dark);">
+                The Tri-Strategy Pedagogical Interlock Matrix
+              </h3>
+              <p style="font-size:0.82rem; color:var(--ink-muted);">
+                Click any core node or intersection to examine the precise educational mechanism keeping all 62 survivors alive:
+              </p>
+            </div>
+            <span style="font-size:0.75rem; font-family:var(--font-mono); background:#ffd166; color:#2c221e; padding:3px 8px; border-radius:4px; font-weight:700;">
+              PROFESSOR SYNTHESIS SPEC
+            </span>
+          </div>
+
+          <div class="matrix-nodes-row">
+            <!-- Node 1: PBL -->
+            <div class="matrix-node-card pbl-node active" id="nodePbl" onclick="selectMatrixNode('pbl')">
+              <div style="font-size:1.5rem; margin-bottom:0.3rem;">🔍</div>
+              <h4 style="font-family:var(--font-display); font-size:0.95rem; color:var(--campfire-amber);">
+                1. Problem-Based Learning
+              </h4>
+              <p style="font-size:0.78rem; color:var(--ink-dark); margin-top:4px;">
+                <strong>Authentic Inquiry Engine:</strong> Ill-structured island emergencies (tainted water, storm shelter, labor shortages) create authentic need-to-know motivation.
+              </p>
+            </div>
+
+            <!-- Node 2: Flipped Classroom -->
+            <div class="matrix-node-card flipped-node" id="nodeFlipped" onclick="selectMatrixNode('flipped')">
+              <div style="font-size:1.5rem; margin-bottom:0.3rem;">🔄</div>
+              <h4 style="font-family:var(--font-display); font-size:0.95rem; color:var(--lagoon-teal);">
+                2. Flipped Classroom
+              </h4>
+              <p style="font-size:0.78rem; color:var(--ink-dark); margin-top:4px;">
+                <strong>Applied Knowledge Retrieval:</strong> Pre-trip video briefings (scientific water purification, mediation steps, Leave-No-Trace) are applied immediately in the field.
+              </p>
+            </div>
+
+            <!-- Node 3: Gamification -->
+            <div class="matrix-node-card gamification-node" id="nodeGamification" onclick="selectMatrixNode('gamification')">
+              <div style="font-size:1.5rem; margin-bottom:0.3rem;">🏆</div>
+              <h4 style="font-family:var(--font-display); font-size:0.95rem; color:var(--canopy-green);">
+                3. Gamification Framework
+              </h4>
+              <p style="font-size:0.78rem; color:var(--ink-dark); margin-top:4px;">
+                <strong>Cooperative Feedback Loop:</strong> The 100-Point Survival Rubric &amp; Badges reward ethical equity, social harmony, and cross-sector mutual aid instead of zero-sum cutthroat competition.
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive Synergy Callout Box -->
+          <div class="synergy-callout-box" id="synergyCallout">
+            <h4 style="font-family:var(--font-display); font-size:1rem; color:#ffd166;" id="synergyTitle">
+              Pedagogical Convergence: How the 3 Strategies Interlock
+            </h4>
+            <p style="font-size:0.85rem; line-height:1.5; color:#f6f1e7; margin-top:0.4rem;" id="synergyText">
+              <strong>PBL</strong> presents the urgent dilemma; <strong>Flipped Classroom</strong> provides the verified scientific &amp; restorative tools to solve it without panic; and <strong>Gamification</strong> reinforces ethical cooperation so students don't fragment into selfish factions. Together, these frameworks transition adolescents from passive textbook memorizers into autonomous, empathetic community guardians.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-notification" id="toastBox">
+    <span id="toastIcon">✨</span>
+    <span id="toastMessage">Action recorded successfully!</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT ARCHITECTURE & SIMULATION LOGIC
+       ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       A. GLOBAL APPLICATION STATE
+       ========================================================================== */
+    const State = {
+      activeTab: 1,
+      audioEnabled: true,
+      activeStrategyLens: null,
+      
+      // Community Health
+      harmonyIndex: 78,
+      
+      // Member 1: Leadership & Council
+      selectedCouncilSeat: 1,
+      currentDilemma: 'water',
+      pblStep: 1,
+      votesCast: false,
+
+      // Member 2: Supply Inventory
+      inventory: {
+        waterBoiled: 68,
+        waterStream: 45,
+        foodRations: 32,
+        foodCoconuts: 58,
+        shelterTarps: 4,
+        medKits: 3
+      },
+
+      // Member 3: Mediation Stepper
+      mediationStep: 1,
+      accordStamped: false,
+
+      // Member 4: Eco-Missions
+      ecoCompleted: [false, false, false],
+      ecoPointsAwarded: 0,
+
+      // Member 5: Scoreboard
+      rubricScores: {
+        coop: 20,
+        ethic: 21,
+        resp: 19,
+        eco: 18
+      },
+      groups: [
+        { id: 1, name: "Sector 1: Governance", score: 82, tier: "Island Guardian" },
+        { id: 2, name: "Sector 2: Shelter & Perimeter", score: 79, tier: "Island Guardian" },
+        { id: 3, name: "Sector 3: Water Verification", score: 85, tier: "Island Guardian" },
+        { id: 4, name: "Sector 4: Food & Foraging", score: 77, tier: "Island Guardian" },
+        { id: 5, name: "Sector 5: Sanitation & First Aid", score: 81, tier: "Island Guardian" },
+        { id: 6, name: "Sector 6: Signaling & Rescue", score: 74, tier: "Pathfinder" },
+        { id: 7, name: "Sector 7: Tool Craft & Lashing", score: 76, tier: "Island Guardian" },
+        { id: 8, name: "Sector 8: Morale & Logistics", score: 80, tier: "Island Guardian" }
+      ],
+      unlockedBadges: ['fairness', 'water'],
+
+      // Member 6: TRACE & Synthesis
+      activeTrace: 'T',
+      activeMatrixNode: 'pbl'
+    };
+
+    /* Sector Info Data */
+    const SECTOR_DATA = {
+      1: {
+        name: "Sector 1: Governance & Camp Bylaws",
+        student: "Student 1",
+        teacher: "Teacher 1",
+        
+      },
+      2: {
+        name: "Sector 2: Shelter & Perimeter Fortification",
+        student: "Student 2",
+        teacher: "Teacher 2",
+        
+      },
+      3: {
+        name: "Sector 3: Water Safety & Quality Verification",
+        student: "Student 3",
+        teacher: "Teacher 3",
+       
+      },
+      4: {
+        name: "Sector 4: Foraging, Food & Firewood Management",
+        student: "Student 4",
+        teacher: "Teacher 4",
+        
+      },
+      5: {
+        name: "Sector 5: Sanitation, Quarantine & First Aid",
+        student: "Student 5",
+        teacher: "Teacher 5",
+        
+      },
+      6: {
+        name: "Sector 6: Signaling, Radio & Emergency Beacon",
+        student: "Student 6",
+        teacher: "Teacher 6",
+        
+      },
+      7: {
+        name: "Sector 7: Tool Craft, Lashing & Mechanical Salvage",
+        student: "Student 7",
+        teacher: "Teacher 7",
+        
+      },
+      8: {
+        name: "Sector 8: Morale, Mental Health & Peer Support",
+        student: "Student 8",
+        teacher: "Teacher 8",
+        
+      }
+    };
+
+    /* ==========================================================================
+       B. WEB AUDIO API SYNTHESIZER (Tactile Sound Effects)
+       ========================================================================== */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!State.audioEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'stamp') {
+          // Deep resonant thud for wax seal
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(45, now + 0.25);
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'success') {
+          // Upbeat major chord chime
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.07);
+            gain.gain.setValueAtTime(0.12, now + i * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.07);
+            osc.stop(now + i * 0.07 + 0.25);
+          });
+        }
+      } catch (e) {
+        console.warn("Audio unavailable:", e);
+      }
+    }
+
+    function toggleAudio() {
+      State.audioEnabled = !State.audioEnabled;
+      document.getElementById('soundIcon').innerText = State.audioEnabled ? '🔊' : '🔇';
+      showToast(State.audioEnabled ? 'Audio Effects Enabled' : 'Audio Effects Muted');
+    }
+
+    /* ==========================================================================
+       C. PERSISTENT HUD & STRATEGY LENS FILTER
+       ========================================================================== */
+    function updateHarmonyIndex(delta) {
+      State.harmonyIndex = Math.min(100, Math.max(0, State.harmonyIndex + delta));
+      const bar = document.getElementById('harmonyBar');
+      const num = document.getElementById('harmonyNum');
+      if (bar) bar.style.width = State.harmonyIndex + '%';
+      if (num) num.innerText = State.harmonyIndex;
+
+      // Animate color based on health
+      if (State.harmonyIndex > 85) {
+        num.style.color = '#52b788';
+      } else if (State.harmonyIndex > 65) {
+        num.style.color = '#ffd166';
+      } else {
+        num.style.color = '#e07a5f';
+      }
+    }
+
+    const STRATEGY_LENS_DETAILS = {
+      pbl: {
+        title: "Active Strategy Lens: Problem-Based Learning (PBL)",
+        icon: "🔍",
+        desc: "HOW IT'S WORKING HERE: Rather than teachers lecturing students on bylaws, 54 adolescents confront ill-structured survival crises (e.g., biological water safety vs. dehydration). Students self-organize into 8 sectors, formulate research questions, debate real trade-offs, and construct democratic resolutions."
+      },
+      flipped: {
+        title: "Active Strategy Lens: Flipped Classroom in the Field",
+        icon: "🔄",
+        desc: "HOW IT'S WORKING HERE: Before boarding the vessel, students watched instructional video briefings (water purification protocols, peer conflict de-escalation, and Leave-No-Trace ecology). Stranded on the island, the traditional lecture is flipped: students immediately retrieve and execute this pre-learned theory to save lives."
+      },
+      gamification: {
+        title: "Active Strategy Lens: Cooperative Gamification",
+        icon: "🏆",
+        desc: "HOW IT'S WORKING HERE: The Island Survival League avoids zero-sum elimination. Points, progress gauges, and unlocked badges reinforce ethical choices, role accountability, and environmental stewardship, turning survival discipline into an engaging collective milestone."
+      }
+    };
+
+    function toggleStrategyLens(lensKey) {
+      playSound('click');
+      const banner = document.getElementById('strategyLensBanner');
+      const pillPbl = document.getElementById('pillPbl');
+      const pillFlipped = document.getElementById('pillFlipped');
+      const pillGamification = document.getElementById('pillGamification');
+
+      // Clear pills
+      pillPbl.classList.remove('active-pbl');
+      pillFlipped.classList.remove('active-flipped');
+      pillGamification.classList.remove('active-gamification');
+
+      if (State.activeStrategyLens === lensKey) {
+        // Toggle off
+        State.activeStrategyLens = null;
+        banner.classList.remove('visible');
+      } else {
+        State.activeStrategyLens = lensKey;
+        const details = STRATEGY_LENS_DETAILS[lensKey];
+        document.getElementById('lensTitle').innerText = details.title;
+        document.getElementById('lensIcon').innerText = details.icon;
+        document.getElementById('lensDesc').innerText = details.desc;
+        banner.classList.add('visible');
+
+        if (lensKey === 'pbl') pillPbl.classList.add('active-pbl');
+        if (lensKey === 'flipped') pillFlipped.classList.add('active-flipped');
+        if (lensKey === 'gamification') pillGamification.classList.add('active-gamification');
+      }
+    }
+
+    function closeStrategyBanner() {
+      State.activeStrategyLens = null;
+      document.getElementById('strategyLensBanner').classList.remove('visible');
+      document.getElementById('pillPbl').classList.remove('active-pbl');
+      document.getElementById('pillFlipped').classList.remove('active-flipped');
+      document.getElementById('pillGamification').classList.remove('active-gamification');
+    }
+
+    /* ==========================================================================
+       D. NAVIGATION & EDITABLE MEMBER NAMES
+       ========================================================================== */
+    function switchTab(tabNum) {
+      playSound('click');
+      State.activeTab = tabNum;
+
+      // Update signposts
+      for (let i = 1; i <= 6; i++) {
+        const nav = document.getElementById('tabNav' + i);
+        const pane = document.getElementById('pane' + i);
+        if (i === tabNum) {
+          nav.classList.add('active');
+          pane.classList.add('active');
+        } else {
+          nav.classList.remove('active');
+          pane.classList.remove('active');
+        }
+      }
+
+      // Re-render subcomponents if switching to tab 5
+      if (tabNum === 5) {
+        renderLeaderboard();
+        updateScoreboardGauges();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Keyboard navigation: 1-6 keys switch tabs
+    window.addEventListener('keydown', (e) => {
+      if (e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= 6) {
+        switchTab(num);
+      }
+    });
+
+    function saveName(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        localStorage.setItem('island_' + id, el.innerText.trim());
+        showToast('Member badge updated!');
+      }
+    }
+
+    function loadSavedNames() {
+      for (let i = 1; i <= 6; i++) {
+        const id = 'member' + i + 'Name';
+        const saved = localStorage.getItem('island_' + id);
+        const el = document.getElementById(id);
+        if (saved && el) {
+          el.innerText = saved;
+        }
+      }
+    }
+
+    /* ==========================================================================
+       E. TAB 1: LEADERSHIP & THE EIGHT-VOICE COUNCIL (PBL)
+       ========================================================================== */
+    function selectCouncilSeat(secId) {
+      playSound('click');
+      State.selectedCouncilSeat = secId;
+
+      // Update SVG node highlights
+      for (let i = 1; i <= 8; i++) {
+        const seatSvg = document.getElementById('seat' + i);
+        const btn = document.getElementById('secBtn' + i);
+        if (i === secId) {
+          if (seatSvg) seatSvg.classList.add('selected');
+          if (btn) btn.classList.add('active');
+        } else {
+          if (seatSvg) seatSvg.classList.remove('selected');
+          if (btn) btn.classList.remove('active');
+        }
+      }
+
+      // Update Detail Card
+      const info = SECTOR_DATA[secId];
+      document.getElementById('secDetailTitle').innerText = info.name;
+      document.getElementById('secStudentRep').innerText = info.student;
+      document.getElementById('secTeacherAdv').innerText = info.teacher;
+      document.getElementById('secChallenge').innerText = info.challenge;
+    }
+
+    const DILEMMA_DATA = {
+      water: {
+        title: "Dilemma 1: Unverified Mountain Spring vs. Dwindling Rainwater Catch",
+        step1: "Inquiry Question: Can we afford the fuel to boil 150L of cloudy stream water, or should we strictly ration the existing 68L boiled catch?",
+        step2: "Safety Assessment: Ingestion of untreated spring runoff poses high risk of dysentery within 24 hours. Faculty veto active on raw water.",
+        logApproved: "8-Voice Council passes Emergency Water Protocol: 60% of firewood allocated to Sector 3 for continuous 3-minute rolling boils. Raw spring access locked."
+      },
+      labor: {
+        title: "Dilemma 2: Divert 60% Labor to High-Cliff Smoke Beacon vs. Rain Shelter",
+        step1: "Inquiry Question: A commercial vessel was spotted 12 miles offshore. Do we risk hypothermia in camp to build a cliff-top signal blaze?",
+        step2: "Safety Assessment: Sunset is at 18:30. Cliff climbs after dark violate teacher safety bylaws. Rain clouds advancing from east.",
+        logApproved: "Council compromises: Sector 6 and 7 maintain cliff heliograph until 17:30 only; all other sectors reinforce camp shelter before squall hits."
+      },
+      ration: {
+        title: "Dilemma 3: Uniform Coconut Rations vs. High-Calorie Allotment for Heavy Diggers",
+        step1: "Inquiry Question: Should all 54 students receive exactly 1/2 coconut, or should the trench diggers and fire keepers receive double?",
+        step2: "Safety Assessment: Equal distribution ignores caloric expenditure (trench crews burn 3,200 kcal/day vs 1,800 kcal resting).",
+        logApproved: "Council approves Equity Rule: Diggers receive +250 kcal electrolyte ration with unanimous consent, provided work logs are audited daily."
+      }
+    };
+
+    function changeDilemma() {
+      playSound('click');
+      const val = document.getElementById('dilemmaSelector').value;
+      State.currentDilemma = val;
+      State.pblStep = 1;
+      State.votesCast = false;
+
+      // Reset step buttons
+      document.getElementById('pblStep1').className = 'pbl-step-btn current';
+      document.getElementById('pblStep2').className = 'pbl-step-btn';
+      document.getElementById('pblStep3').className = 'pbl-step-btn';
+      document.getElementById('stepIcon1').innerText = '▶';
+      document.getElementById('stepIcon2').innerText = '🔒';
+      document.getElementById('stepIcon3').innerText = '🗳️';
+
+      // Reset vote badges
+      for (let i = 1; i <= 8; i++) {
+        const vb = document.getElementById('vb' + i);
+        if (vb) {
+          vb.className = 'vote-badge deliberating';
+          vb.innerText = 'S' + i + ': Deliberating...';
+        }
+      }
+
+      document.getElementById('councilLogOutput').innerHTML = 
+        `[COUNCIL RESET 09:00] New dilemma selected: <strong>${DILEMMA_DATA[val].title}</strong>. Ready for Step 1.`;
+    }
+
+    function runPBLStep(stepNum) {
+      playSound('click');
+      const d = DILEMMA_DATA[State.currentDilemma];
+      const log = document.getElementById('councilLogOutput');
+
+      if (stepNum === 1) {
+        State.pblStep = 2;
+        document.getElementById('pblStep1').className = 'pbl-step-btn completed';
+        document.getElementById('stepIcon1').innerText = '✓';
+        document.getElementById('pblStep2').className = 'pbl-step-btn current';
+        document.getElementById('stepIcon2').innerText = '▶';
+        log.innerHTML += `<br><span style="color:#ffd166;">[STEP 1 - PBL INVESTIGATION]:</span> ${d.step1}`;
+      } else if (stepNum === 2) {
+        State.pblStep = 3;
+        document.getElementById('pblStep2').className = 'pbl-step-btn completed';
+        document.getElementById('stepIcon2').innerText = '✓';
+        document.getElementById('pblStep3').className = 'pbl-step-btn current';
+        document.getElementById('stepIcon3').innerText = '▶';
+        log.innerHTML += `<br><span style="color:#52b788;">[STEP 2 - SAFETY AUDIT]:</span> ${d.step2}`;
+      } else if (stepNum === 3) {
+        // Trigger Vote Animation
+        playSound('success');
+        State.votesCast = true;
+        document.getElementById('pblStep3').className = 'pbl-step-btn completed';
+        document.getElementById('stepIcon3').innerText = '✓';
+
+        // Animate badges flipping
+        const outcomes = ['approved', 'approved', 'approved', 'approved', 'amended', 'approved', 'approved', 'amended'];
+        for (let i = 1; i <= 8; i++) {
+          setTimeout(() => {
+            const vb = document.getElementById('vb' + i);
+            if (vb) {
+              const status = outcomes[i-1];
+              vb.className = 'vote-badge ' + status;
+              vb.innerText = `S${i}: ${status.toUpperCase()}`;
+            }
+          }, i * 75);
+        }
+
+        setTimeout(() => {
+          log.innerHTML += `<br><span style="color:#48cae4;">[STEP 3 - VOTE RATIFIED]:</span> ${d.logApproved}`;
+          updateHarmonyIndex(3);
+          showToast('8-Voice Council Vote Ratified (+3% Harmony)');
+        }, 750);
+      }
+      log.scrollTop = log.scrollHeight;
+    }
+
+    /* ==========================================================================
+       F. TAB 2: RESOURCE INVENTORY & ALLOCATION (FLIPPED CLASSROOM)
+       ========================================================================== */
+    function adjustStock(itemKey, delta) {
+      playSound('click');
+      State.inventory[itemKey] = Math.max(0, State.inventory[itemKey] + delta);
+      
+      if (itemKey === 'waterBoiled') {
+        document.getElementById('qtyWaterBoiled').innerText = State.inventory.waterBoiled;
+        document.getElementById('barWaterBoiled').style.width = Math.min(100, State.inventory.waterBoiled) + '%';
+      } else if (itemKey === 'waterStream') {
+        document.getElementById('qtyWaterStream').innerText = State.inventory.waterStream;
+        document.getElementById('barWaterStream').style.width = Math.min(100, State.inventory.waterStream) + '%';
+      } else if (itemKey === 'foodRations') {
+        document.getElementById('qtyFoodRations').innerText = State.inventory.foodRations;
+        document.getElementById('barFoodRations').style.width = Math.min(100, State.inventory.foodRations * 2) + '%';
+      } else if (itemKey === 'foodCoconuts') {
+        document.getElementById('qtyFoodCoconuts').innerText = State.inventory.foodCoconuts;
+        document.getElementById('barFoodCoconuts').style.width = Math.min(100, State.inventory.foodCoconuts) + '%';
+      } else if (itemKey === 'shelterTarps') {
+        document.getElementById('qtyShelterTarps').innerText = State.inventory.shelterTarps;
+        document.getElementById('barShelterTarps').style.width = Math.min(100, State.inventory.shelterTarps * 20) + '%';
+      } else if (itemKey === 'medKits') {
+        document.getElementById('qtyMedKits').innerText = State.inventory.medKits;
+        document.getElementById('barMedKits').style.width = Math.min(100, State.inventory.medKits * 30) + '%';
+      }
+    }
+
+    function toggleFlipCard(cardEl) {
+      playSound('click');
+      cardEl.classList.toggle('flipped');
+    }
+
+    function simulateAllocationAction(type) {
+      const logList = document.getElementById('distributionLogList');
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (type === 'water_crew') {
+        if (State.inventory.waterBoiled >= 15) {
+          adjustStock('waterBoiled', -15);
+          playSound('click');
+          updateHarmonyIndex(2);
+          const item = document.createElement('div');
+          item.className = 'log-item';
+          item.innerHTML = `
+            <span class="log-timestamp">[${timeStr} ALLOCATED]</span> 15L Boiled Water issued to Sector 2 Shelter Crew.
+            <div class="log-equity-note">Justification: High ambient heat (34°C); prevented heat stroke in 12 heavy trench diggers.</div>
+          `;
+          logList.insertBefore(item, logList.firstChild);
+          showToast('Allocated 15L Water to Trench Crew');
+        } else {
+          showToast('Insufficient Boiled Water reserve!');
+        }
+      } else if (type === 'issue_tarps') {
+        if (State.inventory.shelterTarps >= 2) {
+          adjustStock('shelterTarps', -2);
+          playSound('click');
+          updateHarmonyIndex(2);
+          const item = document.createElement('div');
+          item.className = 'log-item';
+          item.innerHTML = `
+            <span class="log-timestamp">[${timeStr} DEPLOYED]</span> 2 Polycanvas Tarps issued to Communal Shelter Barrack.
+            <div class="log-equity-note">Justification: Barometric drop detected; shields 24 Grade 7 students from rain exposure.</div>
+          `;
+          logList.insertBefore(item, logList.firstChild);
+          showToast('Deployed 2 Tarps for Incoming Storm');
+        } else {
+          showToast('All tarps already in active deployment!');
+        }
+      } else if (type === 'boil_batch') {
+        adjustStock('waterBoiled', 40);
+        adjustStock('waterStream', -40);
+        playSound('success');
+        updateHarmonyIndex(4);
+        const item = document.createElement('div');
+        item.className = 'log-item';
+        item.innerHTML = `
+          <span class="log-timestamp">[${timeStr} VERIFIED]</span> 40L Stream Water boiled for 3 mins by Sector 3.
+          <div class="log-equity-note">Quality Check: Dr. Alcantara coliform strip verified safe. Added to reserve stock.</div>
+        `;
+        logList.insertBefore(item, logList.firstChild);
+        showToast('Logged +40L Verified Boiled Water Batch!');
+      }
+    }
+
+    /* ==========================================================================
+       G. TAB 3: CONFLICT RESOLUTION & FAIRNESS (FLIPPED CLASSROOM)
+       ========================================================================== */
+    function jumpMediationStep(stepNum) {
+      playSound('click');
+      State.mediationStep = stepNum;
+
+      // Update stepper buttons
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById('medStepBtn' + i);
+        const content = document.getElementById('medContent' + i);
+        if (i === stepNum) {
+          btn.className = 'step-node-btn active';
+          if (content) content.style.display = 'block';
+        } else if (i < stepNum) {
+          btn.className = 'step-node-btn done';
+          if (content) content.style.display = 'none';
+        } else {
+          btn.className = 'step-node-btn';
+          if (content) content.style.display = 'none';
+        }
+      }
+    }
+
+    function stampAccord() {
+      if (State.accordStamped) {
+        showToast('Camp Accord is already sealed and active!');
+        return;
+      }
+      playSound('stamp');
+      State.accordStamped = true;
+
+      const seal = document.getElementById('waxSealElement');
+      seal.classList.add('stamped');
+      document.getElementById('stampStatusText').innerHTML = '✓ SEALED &amp; BINDING ACROSS CAMP';
+      document.getElementById('stampStatusText').style.color = 'var(--wax-crimson)';
+      document.getElementById('stampAccordBtn').disabled = true;
+      document.getElementById('stampAccordBtn').style.opacity = '0.6';
+
+      updateHarmonyIndex(5);
+      showToast('Camp Accord Sealed with Crimson Wax! (+5% Harmony)');
+    }
+
+    /* ==========================================================================
+       H. TAB 4: ENVIRONMENTAL MISSIONS (FLIPPED CLASSROOM)
+       ========================================================================== */
+    function completeEcoMission(missionIndex) {
+      if (State.ecoCompleted[missionIndex - 1]) {
+        showToast('This eco-mission is already completed and verified!');
+        return;
+      }
+
+      playSound('success');
+      State.ecoCompleted[missionIndex - 1] = true;
+      State.ecoPointsAwarded += 10;
+
+      // Update Card Visuals
+      const card = document.getElementById('ecoCard' + missionIndex);
+      const btn = document.getElementById('ecoBtn' + missionIndex);
+      card.classList.add('completed');
+      btn.innerHTML = '✓ Verified Sustainable (+10 Pts)';
+      btn.classList.remove('btn-green');
+      btn.style.background = '#40916c';
+      btn.disabled = true;
+
+      document.getElementById('ecoPointsEarned').innerText = State.ecoPointsAwarded;
+
+      // Transfer points to Member 5's Environmental Sustainability Rubric
+      State.rubricScores.eco = Math.min(25, State.rubricScores.eco + 3);
+      updateHarmonyIndex(3);
+
+      // Trigger Leaf Particle Burst
+      burstParticles();
+
+      // Check if Zero-Waste Steward badge should unlock
+      if (State.ecoPointsAwarded >= 20 && !State.unlockedBadges.includes('waste')) {
+        State.unlockedBadges.push('waste');
+        const badgeToken = document.getElementById('badgeZeroWaste');
+        const badgeStatus = document.getElementById('badgeWasteStatus');
+        if (badgeToken) badgeToken.classList.add('unlocked');
+        if (badgeStatus) {
+          badgeStatus.innerText = 'UNLOCKED &check;';
+          badgeStatus.style.color = 'var(--canopy-green)';
+        }
+        showToast('Badge Unlocked: Zero-Waste Steward! 🌿');
+      } else {
+        showToast(`Eco-Mission ${missionIndex} Completed! (+10 Pts Transferred to Member 5)`);
+      }
+    }
+
+    /* Particle Burst Engine for Eco Rewards */
+    function burstParticles() {
+      const canvas = document.getElementById('particle-canvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ['#2d6a4f', '#52b788', '#f4a261', '#ffd166', '#8d6b4f'];
+
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+          y: canvas.height / 2 + (Math.random() - 0.5) * 200,
+          vx: (Math.random() - 0.5) * 12,
+          vy: (Math.random() - 1.2) * 10,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI,
+          vRot: (Math.random() - 0.5) * 0.2,
+          life: 1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+
+        particles.forEach(p => {
+          if (p.life > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.25; // gravity
+            p.rotation += p.vRot;
+            p.life -= 0.015;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life;
+            // Draw stylized leaf / oval
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.style.display = 'none';
+        }
+      }
+      animate();
+    }
+
+    /* ==========================================================================
+       I. TAB 5: ISLAND SURVIVAL LEAGUE SCOREBOARD (GAMIFICATION)
+       ========================================================================== */
+    function updateScoreboardGauges() {
+      // 4 Gauges (Coop, Ethic, Resp, Eco)
+      const coop = State.rubricScores.coop;
+      const ethic = State.rubricScores.ethic;
+      const resp = State.rubricScores.resp;
+      const eco = State.rubricScores.eco;
+
+      document.getElementById('valCoop').innerText = coop;
+      document.getElementById('valEthic').innerText = ethic;
+      document.getElementById('valResp').innerText = resp;
+      document.getElementById('valEco').innerText = eco;
+
+      // Circle circumference = 2 * PI * 40 = ~251.2
+      const maxStroke = 251.2;
+      document.getElementById('ringCoop').style.strokeDashoffset = maxStroke - (coop / 25) * maxStroke;
+      document.getElementById('ringEthic').style.strokeDashoffset = maxStroke - (ethic / 25) * maxStroke;
+      document.getElementById('ringResp').style.strokeDashoffset = maxStroke - (resp / 25) * maxStroke;
+      document.getElementById('ringEco').style.strokeDashoffset = maxStroke - (eco / 25) * maxStroke;
+
+      const total = coop + ethic + resp + eco;
+      document.getElementById('totalRubricScore').innerText = total;
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardRowsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      // Sort descending by score
+      const sorted = [...State.groups].sort((a, b) => b.score - a.score);
+
+      sorted.forEach((grp, idx) => {
+        let tierClass = 'tier-castaway';
+        if (grp.score >= 85) {
+          tierClass = 'tier-vanguard';
+          grp.tier = 'Rescue-Ready Vanguard';
+        } else if (grp.score >= 75) {
+          tierClass = 'tier-guardian';
+          grp.tier = 'Island Guardian';
+        } else if (grp.score >= 50) {
+          tierClass = 'tier-pathfinder';
+          grp.tier = 'Pathfinder';
+        }
+
+        const row = document.createElement('div');
+        row.className = 'group-rank-row';
+        row.innerHTML = `
+          <div class="group-rank-num">#${idx + 1}</div>
+          <div class="group-name-col">
+            <span class="group-label">${grp.name}</span>
+            <span class="group-tier-tag ${tierClass}">${grp.tier}</span>
+          </div>
+          <div class="group-bar-track">
+            <div class="group-bar-fill" style="width:${grp.score}%;"></div>
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; width:50px; text-align:right;">
+            ${grp.score} pts
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function awardPointsLive(category) {
+      playSound('click');
+      const select = document.getElementById('awardSectorSelect');
+      const secId = parseInt(select.value);
+      const group = State.groups.find(g => g.id === secId);
+
+      if (group) {
+        group.score = Math.min(100, group.score + 5);
+
+        // Update gauge category
+        if (category === 'coop') State.rubricScores.coop = Math.min(25, State.rubricScores.coop + 1);
+        if (category === 'ethic') State.rubricScores.ethic = Math.min(25, State.rubricScores.ethic + 1);
+        if (category === 'resp') State.rubricScores.resp = Math.min(25, State.rubricScores.resp + 1);
+
+        updateScoreboardGauges();
+        renderLeaderboard();
+        updateHarmonyIndex(2);
+        showToast(`+5 Points awarded to ${group.name}!`);
+      }
+    }
+
+    function inspectBadge(badgeKey) {
+      playSound('click');
+      if (badgeKey === 'fairness') {
+        alert("🛡️ VOICE OF FAIRNESS BADGE\n\nUnlocked By: Resolving inter-sector resource dispute via non-violent consensus mediation without needing teacher punitive action.\n\nPedagogical Target: Affective Domain & Restorative Justice.");
+      } else if (badgeKey === 'water') {
+        alert("💧 WATER GUARDIAN BADGE\n\nUnlocked By: Enforcing the strict 3-minute rolling boil standard across 155 liters of daily camp drinking water.\n\nPedagogical Target: Scientific Inquiry & Biological Safety Compliance.");
+      } else if (badgeKey === 'waste') {
+        alert("🌿 ZERO-WASTE STEWARD BADGE\n\nUnlocked By: Achieving 20+ Sustainability Points in Member 4's Eco-Missions by upcycling marine plastic into shelter cordage.\n\nPedagogical Target: Leave-No-Trace Environmental Stewardship.");
+      } else if (badgeKey === 'bridge') {
+        alert("🤝 BRIDGE BUILDER BADGE\n\nCriteria: Form an inter-sector tool alliance between Sector 7 (Tool Craft) and Sector 2 (Shelter) to share lashing equipment.");
+      }
+    }
+
+    /* ==========================================================================
+       J. TAB 6: DEBRIEFING & TEACHING STRATEGIES (TRACE)
+       ========================================================================== */
+    const TRACE_STEPS = {
+      T: {
+        title: "T – TELL: Raw Observational Storytelling",
+        body: '"When the storm warning sounded, Sector 4 grabbed the cooking vessel while Sector 2 was already carrying the tarp toward the ridge. We were yelling over each other because we didn\'t know who had scheduled priority."',
+        lesson: "Key Inquiry: Giving voice to all 54 students before analyzing blame prevents defensive reactions."
+      },
+      R: {
+        title: "R – REVIEW: Safety Rule Benchmarking",
+        body: '"We evaluated our actions against Bylaw 4 (Water Safety) and Bylaw 9 (Teacher Safety Oversight). Did we maintain continuous rolling boil? Yes. Did anyone venture alone past the reef? No."',
+        lesson: "Key Inquiry: Comparing actual performance against pre-established survival rules anchors accountability."
+      },
+      A: {
+        title: "A – ANALYZE: Root Cause & Scarcity Friction",
+        body: '"Why did tempers flare? Scarcity anxiety. When students feared cold rain, fight-or-flight triggered. The root cause was not malice; it was the absence of a morning equipment schedule."',
+        lesson: "Key Inquiry: Uncovering structural bottlenecks shifts blame away from individuals onto process flaws."
+      },
+      C: {
+        title: "C – CHOOSE: Concrete System Improvements",
+        body: '"We chose two solutions: First, the tarp serves as a squall water funnel from 17:00-19:00, then becomes the sleeping roof. Second, the daily tool ledger is posted at breakfast."',
+        lesson: "Key Inquiry: Student-selected solutions yield far higher voluntary compliance than teacher mandates."
+      },
+      E: {
+        title: "E – ESTABLISH: Binding Community Covenant",
+        body: '"All 8 Sector representatives signed the Evening Log covenant with crimson wax seals. Every morning, Sector 1 reviews the schedule before labor squads depart."',
+        lesson: "Key Inquiry: Closing the debrief with explicit pledges transforms lessons into enduring community norms."
+      }
+    };
+
+    function selectTraceStep(letter) {
+      playSound('click');
+      State.activeTrace = letter;
+
+      ['T', 'R', 'A', 'C', 'E'].forEach(l => {
+        const card = document.getElementById('traceCard' + l);
+        if (card) {
+          if (l === letter) card.classList.add('active');
+          else card.classList.remove('active');
+        }
+      });
+
+      const d = TRACE_STEPS[letter];
+      document.getElementById('traceBoxTitle').innerText = d.title;
+      document.getElementById('traceBoxBody').innerText = d.body;
+      document.getElementById('traceBoxLesson').innerText = d.lesson;
+    }
+
+    function pinLiveReflection() {
+      const textInput = document.getElementById('pinInputText');
+      const authorInput = document.getElementById('pinAuthorInput');
+      const colSelect = document.getElementById('pinColSelect');
+
+      const text = textInput.value.trim();
+      const author = authorInput.value.trim() || 'Anonymous';
+      const col = colSelect.value;
+
+      if (!text) {
+        showToast('Please type a reflection comment first!');
+        return;
+      }
+
+      playSound('click');
+      const note = document.createElement('div');
+      const rot = (Math.random() * 6 - 3).toFixed(1);
+      const noteColors = ['note-pink', 'note-green', 'note-blue', ''];
+      const chosenColor = noteColors[Math.floor(Math.random() * noteColors.length)];
+
+      note.className = 'sticky-note ' + chosenColor;
+      note.style.setProperty('--rot', rot + 'deg');
+      note.innerHTML = `
+        "${text}"
+        <div class="sticky-author">- ${author}</div>
+      `;
+
+      let targetColId = 'colWorked';
+      if (col === 'failed') targetColId = 'colFailed';
+      if (col === 'improve') targetColId = 'colImprove';
+
+      const colContainer = document.getElementById(targetColId);
+      if (colContainer) {
+        colContainer.insertBefore(note, colContainer.firstChild);
+      }
+
+      textInput.value = '';
+      updateHarmonyIndex(2);
+      showToast('Live Reflection Pinned to Board! (+2% Harmony)');
+    }
+
+    const MATRIX_DETAILS = {
+      pbl: {
+        title: "Problem-Based Learning: The Inquiry & Ownership Engine",
+        text: "PBL places the 54 Junior High School learners directly into ill-structured, high-stakes survival crises. Teachers do not dictate answers; instead, the 8-Voice Council investigates real bottlenecks (pathogen control, storm vulnerability, equity rations) and formulates democratic solutions. This fosters autonomous critical thinking and authentic community responsibility."
+      },
+      flipped: {
+        title: "Flipped Classroom: Real-Time Application of Pre-Trip Theory",
+        text: "The traditional lecture is inverted. Prior to departing, students engaged with interactive video modules on water purification (boiling vs SODIS), peer mediation, and Leave-No-Trace ecology. On the island, this conceptual schema is tested under pressure: students immediately execute scientific protocols and restorative agreements in the field."
+      },
+      gamification: {
+        title: "Gamification: Cooperative, Anti-Zero-Sum Behavioral Incentives",
+        text: "Rather than competing for individual dominance (which destroys marooned communities), the Island Survival League implements collective rubric gauges and shared milestones. Points earned for ethical water safety, environmental stewardship, and inter-sector sharing raise the entire community toward the 'Rescue-Ready' tier."
+      }
+    };
+
+    function selectMatrixNode(nodeKey) {
+      playSound('click');
+      State.activeMatrixNode = nodeKey;
+
+      ['pbl', 'flipped', 'gamification'].forEach(k => {
+        const el = document.getElementById('node' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (el) {
+          if (k === nodeKey) el.classList.add('active');
+          else el.classList.remove('active');
+        }
+      });
+
+      const d = MATRIX_DETAILS[nodeKey];
+      document.getElementById('synergyTitle').innerText = d.title;
+      document.getElementById('synergyText').innerHTML = d.text;
+    }
+
+    /* ==========================================================================
+       K. UTILITIES & TOAST
+       ========================================================================== */
+    function showToast(msg) {
+      const toast = document.getElementById('toastBox');
+      const text = document.getElementById('toastMessage');
+      if (toast && text) {
+        text.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3200);
+      }
+    }
+
+    function resetSimulation() {
+      if (confirm("Reset simulation to initial basecamp metrics?")) {
+        State.harmonyIndex = 78;
+        State.inventory = {
+          waterBoiled: 68,
+          waterStream: 45,
+          foodRations: 32,
+          foodCoconuts: 58,
+          shelterTarps: 4,
+          medKits: 3
+        };
+        State.ecoCompleted = [false, false, false];
+        State.ecoPointsAwarded = 0;
+        State.rubricScores = { coop: 20, ethic: 21, resp: 19, eco: 18 };
+        State.accordStamped = false;
+
+        updateHarmonyIndex(0);
+        updateScoreboardGauges();
+        renderLeaderboard();
+        showToast('Basecamp Simulation Reset to Baseline!');
+      }
+    }
+
+    /* Initialization */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedNames();
+      selectCouncilSeat(1);
+      updateScoreboardGauges();
+      renderLeaderboard();
+    });
+  </script>
+</body>
+</html>
